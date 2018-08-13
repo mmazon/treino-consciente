@@ -24,7 +24,7 @@ public class TreinoService {
 	}
 	
 	public Treino save(Treino Treino) {
-		return repository.saveAndFlush(Treino);
+		return repository.save(Treino);
 	}
 	
 	public void delete(Long id) {

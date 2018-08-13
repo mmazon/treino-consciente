@@ -3,13 +3,34 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<meta name="viewport" content="width=device-width" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />  
 	<title>Treinos</title>
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"></link>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link href="css/styles.css" />
 </head>
 <body>
 	<div class="panel panel-default">
+	 <nav class="navbar navbar-inverse navbar-static-top">
+		  <div class="navbar-header">
+		    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+		      <span class="sr-only">Toggle navigation</span>
+		      <span class="icon-bar"></span>
+		      <span class="icon-bar"></span>
+		      <span class="icon-bar"></span>
+		    </button>
+		    <a class="navbar-brand" th:href="@{/}" style="padding: 1px 1px;">
+		    	<img alt="Treino Consciente" style="width: 117px; height: 53px" src="http://treinoconsciente.pagezz.net/files/sites/10344/2017/11/logo_treino_consciente_black.png">
+	    	</a>
+		  </div>
+		  <div id="navbar" class="navbar-collapse collapse">
+		    <ul class="nav navbar-nav">
+		      <li class="active"><a th:href="@{/}">Home</a></li>
+		      <li><a th:href="@{/add/}" >Novo treino</a></li>
+		    </ul>
+		  </div>
+		</nav>
 		<div class="panel-heading">
 			<strong>Treinos</strong>
 		</div>
@@ -18,22 +39,23 @@
 				<table class="table table-sm table-striped table-hover table-bordered">
 					<thead>
 						<tr>
-							<th>ID</th>
 							<th>Autor</th>
 							<th>Descricao</th>
 							<th>Data</th>
+							<th>Status</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="treino : ${treinos}">
-							<td th:text="${treino.id}"></td>
 							<td th:text="${treino.autor}"></td>
 							<td th:text="${treino.descricao}"></td>
 							<td th:text="${#dates.format(treino.dataTreino, 'dd/MM/yyyy')}"></td>
+							<td th:text="${treino.status}"></td>
 							<td>
 								<div class="btn-group pull-right">
 							   		<a class="btn btn-sm btn-primary" th:href="@{/edit/{id}(id=${treino.id})}" >Editar</a>
+							   		<span/>
 							   		<a class="delete btn btn-sm btn-danger" th:href="@{/delete/{id}(id=${treino.id})}">Excluir</a>
 							   </div>
 							</td>

@@ -12,6 +12,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity(name = "treino")
 public class Treino implements Serializable{
 
@@ -32,19 +34,24 @@ public class Treino implements Serializable{
 	private String observacao;
 	
 	@Column(name = "dt_treino")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	private Date dataTreino;
+	
+	@Column(name = "status")
+	private String status;
 	
 	public Treino() {
 	}
 
-	public Treino(Long id, String autor, String descricao, String observacao, Date dataTreino) {
+	public Treino(Long id, String autor, String descricao, String observacao, Date dataTreino, String status) {
 		super();
 		this.id = id;
 		this.autor = autor;
 		this.descricao = descricao;
 		this.observacao = observacao;
 		this.dataTreino = dataTreino;
+		this.status = status;
 	}
 
 	public Long getId() {
@@ -87,4 +94,11 @@ public class Treino implements Serializable{
 		this.dataTreino = dataTreino;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }
