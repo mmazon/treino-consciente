@@ -14,6 +14,8 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity(name = "treino")
 public class Treino implements Serializable{
 
@@ -27,12 +29,14 @@ public class Treino implements Serializable{
 	@Column(name = "nm_autor")
 	private String autor;
 	
+	@JsonProperty("title")
 	@Column(name = "ds_treino")
 	private String descricao;
 	
 	@Column(name = "ds_obs")
 	private String observacao;
 	
+	@JsonProperty("start")
 	@Column(name = "dt_treino")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
