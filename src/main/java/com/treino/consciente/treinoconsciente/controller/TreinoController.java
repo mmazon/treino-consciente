@@ -9,14 +9,16 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.api.client.auth.oauth2.Credential;
@@ -94,54 +96,52 @@ public class TreinoController {
     }
 
 	
-	@GetMapping("/")
-	public ModelAndView findAll() {
+	@RequestMapping("/")
+	public String findAll(Model model) {
 		Gson gson = new Gson();
 		List<Treino> treinos = service.findAll();
 	    String treinosJson = gson.toJson(treinos);
 		
-		ModelAndView mv = new ModelAndView("/treino");
-		mv.addObject("treinos", treinos);
-		mv.addObject("treinosJson", treinosJson);
+	    model.addAttribute("treinos", treinos);
+	    
+//		ModelAndView mv = new ModelAndView("/treino");
+//		mv.addObject("treinos", treinos);
 		
-		return mv;
+		return "treino";
 	}
 	
 	@GetMapping("/add")
-	public ModelAndView add(Treino treino) {
-		
-		ModelAndView mv = new ModelAndView("/treinoAdd");
-		mv.addObject("treino", treino);
-		
-		return mv;
+	public String add(Treino treino, Model model) { 
+		model.addAttribute("treino", treino);
+		return "treinoAdd";
 	}
 	
 	@GetMapping("/edit/{id}")
-	public ModelAndView edit(@PathVariable("id") Long id) {
+	public String edit(@PathVariable("id") Long id, Model model) {
 		Optional<Treino> treino = service.findOne(id);
 		if(treino.isPresent())
-			return add(treino.get());
-		return add(new Treino());
+			return add(treino.get(), model);
+		return add(new Treino(), model);
 	}
 	
 	@GetMapping("/delete/{id}")
-	public ModelAndView delete(@PathVariable("id") Long id) {
+	public String delete(@PathVariable("id") Long id) {
 		
 		service.delete(id);
 		
-		return findAll();
+		return findAll(null);
 	}
 
 	@PostMapping("/save")
-	public ModelAndView save(@Valid Treino treino, BindingResult result) {
+	public String save(@ModelAttribute Treino treino, BindingResult result, Model model) {
 		
 		if(result.hasErrors()) {
-			return add(treino);
+			return add(treino, model);
 		}
 		
 		service.save(treino);
 		
-		return findAll();
+		return findAll(model);
 	}
 	
 }

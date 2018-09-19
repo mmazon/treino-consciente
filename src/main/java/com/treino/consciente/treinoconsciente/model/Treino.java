@@ -17,7 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity(name = "treino")
-public class Treino implements Serializable{
+public class Treino implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
