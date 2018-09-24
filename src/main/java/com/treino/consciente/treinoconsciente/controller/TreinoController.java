@@ -98,9 +98,9 @@ public class TreinoController {
 	
 	@RequestMapping("/")
 	public String findAll(Model model) {
-		Gson gson = new Gson();
+		//Gson gson = new Gson();
 		List<Treino> treinos = service.findAll();
-	    String treinosJson = gson.toJson(treinos);
+	    //String treinosJson = gson.toJson(treinos);
 		
 	    model.addAttribute("treinos", treinos);
 	    

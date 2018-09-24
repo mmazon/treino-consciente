@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -22,9 +24,10 @@ public class Treino implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
+	@Column(name = "id_treino")
 	@SequenceGenerator(name = "treino_seq", sequenceName = "treino_seq")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "treino_seq")
-	private Long id;
+	private Long idTreino;
 	
 	@Column(name = "nm_autor")
 	private String autor;
@@ -36,7 +39,6 @@ public class Treino implements Serializable {
 	@Column(name = "ds_obs")
 	private String observacao;
 	
-	@JsonProperty("start")
 	@Column(name = "dt_treino")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
@@ -45,12 +47,16 @@ public class Treino implements Serializable {
 	@Column(name = "status")
 	private String status;
 	
+	@ManyToOne
+	@JoinColumn(name = "id_aluno")
+    private Aluno aluno;
+	
 	public Treino() {
 	}
 
-	public Treino(Long id, String autor, String descricao, String observacao, Date dataTreino, String status) {
+	public Treino(Long idTreino, String autor, String descricao, String observacao, Date dataTreino, String status) {
 		super();
-		this.id = id;
+		this.idTreino = idTreino;
 		this.autor = autor;
 		this.descricao = descricao;
 		this.observacao = observacao;
@@ -58,12 +64,20 @@ public class Treino implements Serializable {
 		this.status = status;
 	}
 
-	public Long getId() {
-		return id;
+	public Aluno getAluno() {
+		return aluno;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setAluno(Aluno aluno) {
+		this.aluno = aluno;
+	}
+
+	public Long getIdTreino() {
+		return idTreino;
+	}
+
+	public void setIdTreino(Long idTreino) {
+		this.idTreino = idTreino;
 	}
 
 	public String getAutor() {
