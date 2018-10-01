@@ -37,27 +37,30 @@
 		</div>
 		<div class="panel-body">
 			<div class="table-responsive">
-				<table class="table table-sm table-striped table-hover table-bordered">
+				<table class="table table-sm table-striped table-hover table-bordered" id="tableTreinos">
 					<thead>
 						<tr>
-							<th>Autor</th>
-							<th>Descricao</th>
-							<th>Data</th>
+							<th>Aluno</th>
+							<th>Treino</th>
+							<th>Plano</th>
+							<th>Prof.</th>
 							<th>Status</th>
-							<th></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="treino : ${treinos}">
-							<td th:text="${treino.autor}"></td>
-							<td th:text="${treino.descricao}"></td>
-							<td th:text="${#dates.format(treino.dataTreino, 'dd/MM/yyyy')}"></td>
-							<td th:text="${treino.status}"></td>
+							<td th:text="${treino.aluno.nome}"></td>
+							<td th:text="${treino.tipoTreino}"></td>
+							<td th:text="${treino.plano}"></td>
+							<td th:text="${treino.professor.nome}"></td>
+<!-- 							<td th:text="${#dates.format(treino.dataTreino, 'dd/MM/yyyy')}"></td> -->
+<!-- 							<td th:text="${treino.limiteEnvio}" ></td> -->
+							
+							<td th:text="${treino.limiteEnvio}"  th:style="${treino.corFundoTreino}" ></td>
+							
 							<td>
 								<div class="btn-group pull-right">
 							   		<a class="btn btn-sm btn-primary" th:href="@{/edit/{id}(id=${treino.idTreino})}" >Editar</a>
-							   		<span/>
-							   		<a class="delete btn btn-sm btn-danger" th:href="@{/delete/{id}(id=${treino.idTreino})}">Excluir</a>
 							   </div>
 							</td>
 						</tr>
@@ -66,7 +69,7 @@
 			</div>
 		</div>
 		<div class="panel-footer">
-			<a class="btn btn-sm btn-success" th:href="@{/add/}" >Adicionar</a>
+<!-- 			<a class="btn btn-sm btn-success" th:href="@{/add/}" >Adicionar</a> -->
 		</div>
 	</div>
 </body>

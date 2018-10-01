@@ -6,25 +6,25 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.treino.consciente.treinoconsciente.model.Aluno;
-import com.treino.consciente.treinoconsciente.repository.AlunoRepository;
+import com.treino.consciente.treinoconsciente.model.Professor;
+import com.treino.consciente.treinoconsciente.repository.ProfessorRepository;
 
 @Service
-public class AlunoService {
+public class ProfessorService {
 	
 	@Autowired
-	private AlunoRepository repository;
+	private ProfessorRepository repository;
 	
-	public List<Aluno> findAll() {
+	public List<Professor> findAll() {
 		return repository.findAll();
 	}
 	
-	public Optional<Aluno> findOne(Long id) {
+	public Optional<Professor> findOne(Long id) {
 		return repository.findById(id);
 	}
 	
-	public Aluno save(Aluno aluno) {
-		return repository.save(aluno);
+	public Professor save(Professor professor) {
+		return repository.save(professor);
 	}
 	
 	public void delete(Long id) {

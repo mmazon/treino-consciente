@@ -51,27 +51,57 @@
 						    </div>
 						 </div>
 						<div class="form-group row">                                                          
-							<div class="col-md-4" th:classappend="${#fields.hasErrors('autor')}? 'has-error'">
-							    <label>Autor</label>
-							    <input type="text" class="form-control input-sm" th:field="*{autor}" autofocus="autofocus" placeholder="Informe o autor" maxlength="50"/>
+							<div class="col-md-4" th:classappend="${#fields.hasErrors('professor.nome')}? 'has-error'">
+							    <label>Professor</label> 
+								<input type="text" class="form-control input-sm" th:field="*{professor.nome}" id="professor" readOnly="readonly"/>
 							</div>
 						</div>
 						<div class="form-group row">
-							<div class="col-md-4" th:classappend="${#fields.hasErrors('descricao')}? 'has-error'">
-								<label>Descricao</label> 
-								<input type="text" class="form-control input-sm" th:field="*{descricao}" maxlength="150" placeholder="Informe a descricao"/>
+							<div class="col-md-4" th:classappend="${#fields.hasErrors('aluno.nome')}? 'has-error'">
+								<label>Aluno</label>
+							    <input type="text" class="form-control input-sm" th:field="*{aluno.nome}" readOnly="readonly" id="aluno"/>								
 							</div>
 						</div>
 						<div class="form-group row">
-							<div class="col-md-2" th:classappend="${#fields.hasErrors('dataTreino')}? 'has-error'">
-								<label>Data</label> 
-								<input type="date" class="form-control input-sm" th:field="*{dataTreino}"/>
+							<div class="col-md-2" th:classappend="${#fields.hasErrors('dataRespostaFormulario')}? 'has-error'">
+								<label>Data Resposta</label> 
+								<input type="date" class="form-control input-sm" th:field="*{dataRespostaFormulario}" id="dataRespostaFormulario" readOnly="readonly"/>
 							</div>
-						</div>						
+						</div>
+						<div class="form-group row">
+							<div class="col-md-2">
+								<label>Data Limite Envio</label> 
+								<input type="text" class="form-control input-sm" th:field="*{limiteEnvio}" id="dataLimiteEnvio" readOnly="readonly"/>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-2" th:classappend="${#fields.hasErrors('dataEnvioTreino')}? 'has-error'">
+								<label>Data Envio</label> 
+								<input type="date" class="form-control input-sm" th:field="*{dataEnvioTreino}" id="dataEnvioTreino"/>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-4" th:classappend="${#fields.hasErrors('status')}? 'has-error'">
+								<label>Status</label>
+							    <input type="text" class="form-control input-sm" th:field="*{status}" id="status"/>								
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-4" th:classappend="${#fields.hasErrors('tipoTreino')}? 'has-error'">
+								<label>Tipo treino</label>
+							    <input type="text" class="form-control input-sm" th:field="*{tipoTreino}" id="tipoTreino"/>								
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-4" th:classappend="${#fields.hasErrors('plano')}? 'has-error'">
+								<label>Plano</label>
+							    <input type="text" class="form-control input-sm" th:field="*{plano}" id="plano"/>								
+							</div>
+						</div>												
 						<div class="form-group row">
 							<div class="col-md-4" th:classappend="${#fields.hasErrors('observacao')}? 'has-error'">
 								<label>Obs</label>
-								<textarea class="form-control input-sm" th:field="*{observacao}" cols="5" rows="5" placeholder="Informe a obs"></textarea>
+								<textarea class="form-control input-sm" th:field="*{observacao}" id="observacao" cols="5" rows="5" placeholder="Informe a obs"></textarea>
 							</div>
 						</div>						
 					</fieldset>
