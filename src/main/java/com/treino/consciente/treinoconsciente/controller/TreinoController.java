@@ -2,7 +2,7 @@ package com.treino.consciente.treinoconsciente.controller;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.treino.consciente.treinoconsciente.model.Treino;
+import com.treino.consciente.treinoconsciente.service.AlunoService;
+import com.treino.consciente.treinoconsciente.service.ProfessorService;
 import com.treino.consciente.treinoconsciente.service.TreinoService;
 
 @Controller
@@ -26,25 +28,42 @@ public class TreinoController {
 	
 	@Autowired
 	private TreinoService treinoService;
+	@Autowired
+	private AlunoService alunoService;
+	@Autowired
+	private ProfessorService profService;
 	
 	Logger logger = LoggerFactory.getLogger(TreinoController.class);
 	
 	@RequestMapping("/")
 	public String findAll(Model model) {
-		try {
-			treinoService.syncFormulariosRespostas();
-		} catch (GeneralSecurityException | IOException | ParseException e) {
-			logger.error(e.getMessage());
-		}
-		
-		List<Treino> treinos = treinoService.findAll();
+		List<Treino> treinos = treinoService.findAllByStatus("NAOENVIADO");
 	    model.addAttribute("treinos", treinos);
 		return "home";
 	}
 	
+	@RequestMapping("/sync")
+	public String sincronizar(Model model) {
+		try {
+			treinoService.syncFormulariosRespostas();
+		} catch (GeneralSecurityException | IOException | java.text.ParseException e) {
+			logger.error(e.getMessage());
+		}
+		
+		List<Treino> treinos = treinoService.findAllByStatus("NAOENVIADO");
+	    model.addAttribute("treinos", treinos);
+		return "home";
+	}
+	
+//	@GetMapping("/formulario")
+//	public String formulario(Model model) { 
+//		return "formulario";
+//	}
+	
 	@GetMapping("/add")
 	public String add(Treino treino, Model model) { 
 		model.addAttribute("treino", treino);
+		model.addAttribute("profs", profService.findAll());
 		return "treinoAdd";
 	}
 	
@@ -69,7 +88,9 @@ public class TreinoController {
 		if(result.hasErrors()) {
 			return add(treino, model);
 		}
-		
+		treino.setProfessor(profService.findOne(treino.getProfessor().getIdProfessor()).get());
+		treino.setAluno(alunoService.findOne(treino.getAluno().getIdAluno()).get());
+		treino.setDataEnvioTreino(new Date());
 		treinoService.save(treino);
 		
 		return findAll(model);

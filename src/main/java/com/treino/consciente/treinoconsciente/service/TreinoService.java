@@ -1,13 +1,10 @@
 package com.treino.consciente.treinoconsciente.service;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -15,23 +12,8 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.store.FileDataStoreFactory;
-import com.google.api.services.sheets.v4.Sheets;
-import com.google.api.services.sheets.v4.SheetsScopes;
-import com.google.api.services.sheets.v4.model.ValueRange;
-import com.treino.consciente.treinoconsciente.controller.TreinoController;
 import com.treino.consciente.treinoconsciente.model.Aluno;
 import com.treino.consciente.treinoconsciente.model.Professor;
 import com.treino.consciente.treinoconsciente.model.Treino;
@@ -60,12 +42,12 @@ public class TreinoService {
 	private static final String SPREADSHEET_ID_RENOV_TRI = "1vNJdUIvOBNW34jGQfAASv79h-KXeZZhRx6L3VqjB-m4";
 	private static final String SPREADSHEET_ID_RENOV_ANO = "1CpE3TeHMwRpTk9zH-0l1lceotPIiFOWtNPunJvEDdSA";
 	
-    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String APPLICATION_NAME = "Treino Consciente";
-    private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY);
-	
 	public List<Treino> findAll() {
 		return terinoRepository.findAll();
+	}
+	
+	public List<Treino> findAllByStatus(String status) {
+		return terinoRepository.findAllByStatusOrderByIdTreinoAsc(status);
 	}
 	
 	public Optional<Treino> findOne(Long id) {
@@ -93,7 +75,7 @@ public class TreinoService {
 	    	   Date dataRespostaFormulario = pegaDataResposta(formatterDataHora.parse((String)row.get(0)));
 	    	   String email = (String)row.get(1);
 	    	   Boolean jaImportou = verificaSeJaImportouHoje(dataRespostaFormulario, email);
-	    	   
+
 	    	   if(!jaImportou){
 	    		   Aluno alunoCriado = criaAluno(row, dataRespostaFormulario, formatterHora, spreadsheet);
 	    		   criaTreino(verificaResposalvelTreino(), tipoTreino, plano, row, dataRespostaFormulario, alunoCriado, false);
@@ -140,29 +122,30 @@ public class TreinoService {
 
 	private List<List<Object>> consultaGoogleSpreasheetTreinos(String spreadsheet, String range)
 			throws GeneralSecurityException, IOException {
-//		Build a new authorized API client service.
-		final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-		Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
-		ValueRange response = service.spreadsheets().values().get(spreadsheet, range).execute();
-		List<List<Object>> values = response.getValues();
-		return values;
+		GoogleSheetsReader gr = new GoogleSheetsReader();
+		return gr.readSheet(range, spreadsheet);
 	}
 
 	private void criaTreino(Professor professor, String tipoTreino, String plano, List<Object> row, Date dataRespostaFormulario, Aluno alunoCriado, Boolean isRenovacao) throws ParseException {
 		int sequencia = 1;
+		Treino ultimoTreino = null;
 		if(isRenovacao){
-			List<Treino> treinos = terinoRepository.findAlunoTreinoByIdAluno(alunoCriado.getIdAluno());
+			List<Treino> treinos = terinoRepository.buscaTreinosByIdAluno(alunoCriado.getIdAluno());
 			if(treinos != null && treinos.size() > 0){
-				Treino ultimoTreino = treinos.get(0); 
+				ultimoTreino = treinos.get(0); 
 				sequencia = ultimoTreino.getSequenciaTreino() + 1;
 			}
 		}
 		Treino treino = new Treino();
 		treino.setDataRespostaFormulario(dataRespostaFormulario);
-		treino.setStatus("");
+		treino.setStatus("NAOENVIADO");
 		treino.setTipoTreino(sequencia +""+ tipoTreino);
 		treino.setPlano(plano);
-		treino.setProfessor(professor);
+		if(ultimoTreino != null && ultimoTreino.getProfessor() != null){
+			treino.setProfessor(ultimoTreino.getProfessor());
+		}else{
+			treino.setProfessor(professor);
+		}
 		treino.setAluno(alunoCriado);
 		treino.setSequenciaTreino(sequencia);
 		terinoRepository.save(treino);
@@ -198,24 +181,9 @@ public class TreinoService {
 		return alunoRepository.save(aluno);
 	}
 	
-	 private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
-	        // Load client secrets.
-	        InputStream in = TreinoController.class.getResourceAsStream("/credentials.json");
-	        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-
-	        // Build flow and trigger user authorization request.
-	        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-	                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-	                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File("tokens")))
-	                .setAccessType("offline")
-	                .build();
-	        return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
-
-   }
-
 	public void syncFormulariosRespostas() throws GeneralSecurityException, IOException, ParseException {
-		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_TRI, "Respostas ao formulário 2!A2:AQ", "-3", "Trimestral");
 		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_MES, "Respostas ao formulário 1!A2:AQ", "-1", "Mensal");
+		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_TRI, "Respostas ao formulário 2!A2:AQ", "-3", "Trimestral");
 		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_ANO, "Respostas ao formulário 1!A2:AQ", "-12", "Anual");
 		
 		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_TRI, "Respostas ao formulário 1!A2:O2", "-3", "Renov. Trimestral");
@@ -226,7 +194,7 @@ public class TreinoService {
 	
 	public Professor verificaResposalvelTreino(){
 		List<Professor> profs = profRepository.findAll();
-		List<Treino> treinos = terinoRepository.findAll(Sort.by("idTreino").descending());
+		List<Treino> treinos = terinoRepository.findAllByTipoTreinoIgnoreCaseContainingOrderByIdTreinoDesc("1-");
 		for(Professor prof : profs){
 			if(treinos != null && treinos.size() > 0){
 				Treino treino1 = treinos.get(0);
@@ -249,7 +217,7 @@ public class TreinoService {
 	}
 
 	private Professor verificaResposalvelTreinoRenovacao(long idAluno) {
-		List<Treino> treinos = terinoRepository.findAlunoTreinoByIdAluno(idAluno);
+		List<Treino> treinos = terinoRepository.buscaTreinosByIdAluno(idAluno);
 		if(treinos != null && treinos.size() > 0)
 			return treinos.get(0).getProfessor();
 		return verificaResposalvelTreino();

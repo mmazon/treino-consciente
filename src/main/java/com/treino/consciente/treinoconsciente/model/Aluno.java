@@ -2,15 +2,12 @@ package com.treino.consciente.treinoconsciente.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 @Entity(name = "aluno")
@@ -54,18 +51,7 @@ public class Aluno implements Serializable {
 	@Column(name = "peso")
 	private String peso;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "aluno")
-    private List<Treino> treinos;
-	
 	public Aluno() {
-	}
-
-	public List<Treino> getTreinos() {
-		return treinos;
-	}
-
-	public void setTreinos(List<Treino> treinos) {
-		this.treinos = treinos;
 	}
 
 	public Long getIdAluno() {
@@ -161,7 +147,7 @@ public class Aluno implements Serializable {
 		return "Aluno [idAluno=" + idAluno + ", nome=" + nome + ", dataRespostaFormulario=" + dataRespostaFormulario
 				+ ", dataNascimento=" + dataNascimento + ", email=" + email + ", sexo=" + sexo + ", telefone="
 				+ telefone + ", cidadeUf=" + cidadeUf + ", linkFormulario=" + linkFormulario + ", observacao="
-				+ observacao + ", peso=" + peso + ", treinos=" + treinos + "]";
+				+ observacao + ", peso=" + peso + "]";
 	}
 
 	@Override
@@ -179,7 +165,6 @@ public class Aluno implements Serializable {
 		result = prime * result + ((peso == null) ? 0 : peso.hashCode());
 		result = prime * result + ((sexo == null) ? 0 : sexo.hashCode());
 		result = prime * result + ((telefone == null) ? 0 : telefone.hashCode());
-		result = prime * result + ((treinos == null) ? 0 : treinos.hashCode());
 		return result;
 	}
 
@@ -270,13 +255,6 @@ public class Aluno implements Serializable {
 				return false;
 			}
 		} else if (!telefone.equals(other.telefone)) {
-			return false;
-		}
-		if (treinos == null) {
-			if (other.treinos != null) {
-				return false;
-			}
-		} else if (!treinos.equals(other.treinos)) {
 			return false;
 		}
 		return true;

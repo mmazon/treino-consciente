@@ -1,15 +1,12 @@
 package com.treino.consciente.treinoconsciente.model;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 	
@@ -36,17 +33,6 @@ public class Professor implements Serializable {
 	@Column(name = "senha")
 	private String senha;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "professor")
-    private List<Treino> treinos;
-	
-	public List<Treino> getTreinos() {
-		return treinos;
-	}
-
-	public void setTreinos(List<Treino> treinos) {
-		this.treinos = treinos;
-	}
-
 	public Professor() {
 	}
 
@@ -93,7 +79,7 @@ public class Professor implements Serializable {
 	@Override
 	public String toString() {
 		return "Professor [idProfessor=" + idProfessor + ", nome=" + nome + ", email=" + email + ", login=" + login
-				+ ", senha=" + senha + ", treinos=" + treinos + "]";
+				+ ", senha=" + senha + "]";
 	}
 
 	@Override
@@ -105,7 +91,6 @@ public class Professor implements Serializable {
 		result = prime * result + ((login == null) ? 0 : login.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		result = prime * result + ((senha == null) ? 0 : senha.hashCode());
-		result = prime * result + ((treinos == null) ? 0 : treinos.hashCode());
 		return result;
 	}
 
@@ -154,13 +139,6 @@ public class Professor implements Serializable {
 				return false;
 			}
 		} else if (!senha.equals(other.senha)) {
-			return false;
-		}
-		if (treinos == null) {
-			if (other.treinos != null) {
-				return false;
-			}
-		} else if (!treinos.equals(other.treinos)) {
 			return false;
 		}
 		return true;

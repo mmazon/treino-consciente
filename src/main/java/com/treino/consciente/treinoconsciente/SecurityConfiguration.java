@@ -18,6 +18,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http.authorizeRequests()
+	    .antMatchers("/formulario/**").permitAll()
+	    .antMatchers("/css/**").permitAll()
+	    .antMatchers("/js/**").permitAll()
+	    .antMatchers("/images/**").permitAll()
         .anyRequest()
         .authenticated()
         .and()
@@ -41,6 +45,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
          .roles("ADMIN")
          .and()
          .withUser("rafa")
+         .password(passwordEncoder().encode("admin"))
+         .roles("ADMIN")
+         .and()
+         .withUser("josue")
+         .password(passwordEncoder().encode("admin"))
+         .roles("ADMIN")
+		 .and()
+         .withUser("rodrigo")
          .password(passwordEncoder().encode("admin"))
          .roles("ADMIN");
 	}

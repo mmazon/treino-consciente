@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -60,11 +61,11 @@ public class Treino implements Serializable {
 		this.sequenciaTreino = sequenciaTreino;
 	}
 
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name = "id_aluno")
     private Aluno aluno;
 	
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name = "id_professor")
     private Professor professor;
 	
@@ -144,9 +145,6 @@ public class Treino implements Serializable {
 	}
 	
 	public String getLimiteEnvio() {
-		if(status.equals("ENVIADO")){
-			return status;
-		}
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(dataRespostaFormulario);
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");

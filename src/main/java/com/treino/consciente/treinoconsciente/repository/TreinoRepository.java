@@ -13,9 +13,13 @@ import com.treino.consciente.treinoconsciente.model.Treino;
 public interface TreinoRepository extends JpaRepository<Treino, Long> {
 	
 	@Query("SELECT t FROM treino t WHERE t.aluno.idAluno = ?1 ORDER BY idTreino DESC")
-	List<Treino> findAlunoTreinoByIdAluno(long idAluno);
+	List<Treino> buscaTreinosByIdAluno(long idAluno);
 	
 	@Query("SELECT t FROM treino t WHERE t.dataRespostaFormulario = ?1 AND t.aluno.email = ?2")
 	Treino findTreinoByDataRespostaAndEmail(Date dataRespostaFormulario, String email);
+	
+	List<Treino> findAllByStatusOrderByIdTreinoAsc(String status);
+	
+	List<Treino> findAllByTipoTreinoIgnoreCaseContainingOrderByIdTreinoDesc(String tipo);
 
 }
