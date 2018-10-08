@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />  
+	<title>Anamnese</title>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"></link>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link  th:href="@{/css/styles.css}" rel="stylesheet"></link>
+	<script th:src="@{/js/formulario.js}"></script>
+</head>
+<style th:inline="text">
+    body{
+        background: url([[@{/images/backgroud_forms.jpg}]]) no-repeat;
+        background-size: 100% 62%;
+    }
+</style>
+<body>
+<div class="container">
+<!-- 	<div style="padding-top: 100px"></div> -->
+<!-- 	<div class="row" style="padding-top: 10px"> -->
+	<div class="row">
+		<section style="padding-top: 160px !important;">
+        <div class="wizard">
+            <div class="wizard-inner">
+                <div class="connecting-line"></div>
+                <ul class="nav nav-tabs" role="tablist">
+
+                    <li role="presentation" class="active">
+                        <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Passo 1">
+                            <span class="round-tab">
+                                <i class="glyphicon glyphicon-folder-open"></i>
+                            </span>
+                        </a>
+                    </li>
+
+                    <li role="presentation" class="disabled">
+                        <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Passo 2">
+                            <span class="round-tab">
+                                <i class="glyphicon glyphicon-pencil"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li role="presentation" class="disabled">
+                        <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Passo 3">
+                            <span class="round-tab">
+                                <i class="glyphicon glyphicon-picture"></i>
+                            </span>
+                        </a>
+                    </li>
+
+                    <li role="presentation" class="disabled">
+                        <a href="#complete" data-toggle="tab" aria-controls="complete" role="tab" title="Completo">
+                            <span class="round-tab">
+                                <i class="glyphicon glyphicon-ok"></i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <form role="form">
+                <div class="tab-content">
+                    <div class="tab-pane active" style="text-align: center !important" role="tabpanel" id="step1">
+                        <h3>Informe seu e-mail</h3>
+                      	<div class="row">
+						    <div class="col-md-6 col-md-offset-3 text-center">
+						        <div class="form-group">
+						            <input id="firstName" class="form-control input-lg text-center" type="text">
+						        </div>
+						    </div>
+						</div>
+                        <ul class="list-inline pull-right">
+                            <li><button type="button" class="btn btn-primary next-step">Salvar e continuar</button></li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane" style="text-align: center !important" role="tabpanel" id="step2">
+                       <h3>Dados pessoais</h3>
+                        <div class="row">
+						    <div class="col-md-6 col-md-offset-3 text-center">
+						        <div class="form-group">
+						        	<h4>Nome completo</h4>
+						            <input id="firstName" class="form-control input-lg text-center" type="text">
+						        </div>
+						    </div>
+						</div>
+						<div class="row">
+						    <div class="col-md-6 col-md-offset-3 text-center">
+						        <div class="form-group">
+						        	<h4>Sexo</h4>
+						            <div class="custom-control custom-radio">
+									  <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input">
+									  <label class="custom-control-label" for="customRadio1">Feminino</label>
+									</div>
+									<div class="custom-control custom-radio">
+									  <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
+									  <label class="custom-control-label" for="customRadio2">Masculino</label>
+									</div>
+									
+						        </div>
+						    </div>
+						</div>
+						<div class="row">
+						    <div class="col-md-6 col-md-offset-3 text-center">
+						        <div class="form-group">
+						        	<label>Nome completo</label>
+						            <input id="firstName" class="form-control input-lg text-center" type="text">
+						        </div>
+						    </div>
+						</div>
+	                        
+                        <ul class="list-inline pull-right">
+                            <li><button type="button" class="btn btn-default prev-step">Voltar</button></li>
+                            <li><button type="button" class="btn btn-primary next-step">Salvar e continuar</button></li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane" style="text-align: center !important" role="tabpanel" id="step3">
+                        <h3>Saúde</h3>
+                        <div class="row">
+						    <div class="col-md-6 col-md-offset-3 text-center">
+						        <div class="form-group">
+						        	<label>Nome completo</label>
+						            <input id="firstName" class="form-control input-lg text-center" type="text">
+						        </div>
+						    </div>
+						</div>
+                        <ul class="list-inline pull-right">
+                            <li><button type="button" class="btn btn-default prev-step">Voltar</button></li>
+                            <li><button type="button" class="btn btn-primary btn-info-full next-step">Salvar e continuar</button></li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane" style="text-align: center !important" role="tabpanel" id="complete">
+                  		<div class="row">
+						    <div class="col-md-6 col-md-offset-3 text-center">
+						        <div class="form-group">
+						        	<label>Nome completo</label>
+						            <input id="firstName" class="form-control input-lg text-center" type="text">
+						        </div>
+						    </div>
+						</div>
+                         <ul class="list-inline pull-right">
+                            <li><button type="button" class="btn btn-default prev-step">Voltar</button></li>
+                            <li><button type="button" class="btn btn-primary btn-info-full next-step">Salvar e enviar</button></li>
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </form>
+        </div>
+    </section>
+   </div>
+</div>
+
+</body>
+</html>
