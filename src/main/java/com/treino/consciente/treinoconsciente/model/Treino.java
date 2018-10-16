@@ -41,6 +41,10 @@ public class Treino implements Serializable {
 	@Column(name = "data_envio")
 	private Date dataEnvioTreino;
 	
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@Column(name = "data_reentrada")
+	private Date dataReentrada;
+
 	@Column(name = "status")
 	private String status;
 	
@@ -177,7 +181,7 @@ public class Treino implements Serializable {
 	@Override
 	public String toString() {
 		return "Treino [idTreino=" + idTreino + ", observacao=" + observacao + ", dataRespostaFormulario="
-				+ dataRespostaFormulario + ", dataEnvioTreino=" + dataEnvioTreino + ", status=" + status
+				+ dataRespostaFormulario + ", dataEnvioTreino=" + dataEnvioTreino + ", status=" + status + ", dataReentrada=" + dataReentrada 
 				+ ", tipoTreino=" + tipoTreino + ", plano=" + plano + ", sequenciaTreino=" + sequenciaTreino
 				+ ", aluno=" + aluno + ", professor=" + professor + "]";
 	}
@@ -282,6 +286,15 @@ public class Treino implements Serializable {
 			return false;
 		}
 		return true;
+	}
+	
+	
+	public Date getDataReentrada() {
+		return dataReentrada;
+	}
+
+	public void setDataReentrada(Date dataReentrada) {
+		this.dataReentrada = dataReentrada;
 	}
 
 }

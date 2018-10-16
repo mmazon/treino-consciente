@@ -2,6 +2,9 @@ package com.treino.consciente.treinoconsciente.controller;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -90,9 +93,14 @@ public class TreinoController {
 		}
 		treino.setProfessor(profService.findOne(treino.getProfessor().getIdProfessor()).get());
 		treino.setAluno(alunoService.findOne(treino.getAluno().getIdAluno()).get());
-		treino.setDataEnvioTreino(new Date());
+		if(treino.getStatus().equals("ENVIADO")){
+			treino.setDataEnvioTreino(new Date());
+			Calendar calhj = Calendar.getInstance();
+			LocalDate dataHoje = LocalDate.of(calhj.get(Calendar.YEAR), calhj.get(Calendar.MONTH)+1, calhj.get(Calendar.DAY_OF_MONTH));
+			dataHoje = dataHoje.plusDays(30);
+			treino.setDataReentrada(Date.from(dataHoje.atStartOfDay(ZoneId.systemDefault()).toInstant())); 
+		}
 		treinoService.save(treino);
-		
 		return findAll(model);
 	}
 	
