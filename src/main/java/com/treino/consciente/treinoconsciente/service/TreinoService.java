@@ -72,6 +72,11 @@ public class TreinoService {
 	       logger.info("No data found in " + spreadsheet);
 	   } else {
 	       for (List<Object> row : values) {
+	    	   String a = (String)row.get(0);
+	    	   if(a.equals("Carimbo de data/hora")){
+				   logger.info("No data found in " + spreadsheet);
+				   continue;
+			   }
 	    	   SimpleDateFormat formatterDataHora = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	    	   SimpleDateFormat formatterHora = new SimpleDateFormat("dd/MM/yyyy");
 	    	   
@@ -108,6 +113,12 @@ public class TreinoService {
           logger.info("No data found in " + spreadsheet);
       } else {
 		   for (List<Object> row : values) {
+			   String a = (String)row.get(0);
+			   if(a.equals("Carimbo de data/hora")){
+				   logger.info("No data found in " + spreadsheet);
+				   continue;
+			   }
+				   
 			   SimpleDateFormat formatterDataHora = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			   SimpleDateFormat formatterHora = new SimpleDateFormat("dd/MM/yyyy");
 			   
@@ -221,13 +232,13 @@ public class TreinoService {
 	}
 	
 	public void syncFormulariosRespostas() throws GeneralSecurityException, IOException, ParseException {
-		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_MES, "Respostas ao formulário 1!A2:AQ", "-1", "Mensal");
-		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_TRI, "Respostas ao formulário 2!A2:AQ", "-3", "Trimestral");
-		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_ANO, "Respostas ao formulário 1!A2:AQ", "-12", "Anual");
+		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_MES, "Respostas ao formulário 1", "-1", "Mensal");
+		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_TRI, "Respostas ao formulário 2", "-3", "Trimestral");
+		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_ANO, "Respostas ao formulário 1", "-12", "Anual");
 		
-		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_TRI, "Respostas ao formulário 1!A2:O2", "-3", "Renov. Trimestral");
-		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_MES, "Respostas ao formulário 1!A2:O2", "-1", "Renov. Mensal");
-		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_ANO, "Respostas ao formulário 1!A2:O2", "-12", "Renov. Anual");
+		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_TRI, "Respostas ao formulário 1", "-3", "Renov. Trimestral");
+		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_MES, "Respostas ao formulário 1", "-1", "Renov. Mensal");
+		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_ANO, "Respostas ao formulário 1", "-12", "Renov. Anual");
 		
 	}
 	
