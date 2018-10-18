@@ -244,7 +244,7 @@ public class TreinoService {
 	
 	public Professor verificaResposalvelTreino(){
 		List<Professor> profs = profRepository.findAll();
-		List<Treino> treinos = treinoRepository.findAllByTipoTreinoIgnoreCaseContainingOrderByIdTreinoDesc("1-");
+		List<Treino> treinos = treinoRepository.findTreinosByTipoAndPlano("1-", "Renov.");
 		for(Professor prof : profs){
 			if(treinos != null && treinos.size() > 0){
 				Treino treino1 = treinos.get(0);
