@@ -21,5 +21,10 @@ public interface TreinoRepository extends JpaRepository<Treino, Long> {
 	List<Treino> findAllByStatusOrderByIdTreinoAsc(String status);
 	
 	List<Treino> findAllByTipoTreinoIgnoreCaseContainingOrderByIdTreinoDesc(String tipo);
+	
+	@Query("SELECT t FROM treino t WHERE t.dataReentrada > ?1 and reentrou = 0 ")
+	List<Treino> buscaTreinosReentradas(Date data);
+	
+	
 
 }

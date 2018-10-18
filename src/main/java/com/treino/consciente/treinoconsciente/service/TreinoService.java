@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +28,7 @@ import com.treino.consciente.treinoconsciente.repository.TreinoRepository;
 public class TreinoService {
 	
 	@Autowired
-	private TreinoRepository terinoRepository;
+	private TreinoRepository treinoRepository;
 	
 	@Autowired
 	private AlunoRepository alunoRepository;
@@ -43,23 +46,23 @@ public class TreinoService {
 	private static final String SPREADSHEET_ID_RENOV_ANO = "1CpE3TeHMwRpTk9zH-0l1lceotPIiFOWtNPunJvEDdSA";
 	
 	public List<Treino> findAll() {
-		return terinoRepository.findAll();
+		return treinoRepository.findAll();
 	}
 	
 	public List<Treino> findAllByStatus(String status) {
-		return terinoRepository.findAllByStatusOrderByIdTreinoAsc(status);
+		return treinoRepository.findAllByStatusOrderByIdTreinoAsc(status);
 	}
 	
 	public Optional<Treino> findOne(Long id) {
-		return terinoRepository.findById(id);
+		return treinoRepository.findById(id);
 	}
 	
 	public Treino save(Treino Treino) {
-		return terinoRepository.save(Treino);
+		return treinoRepository.save(Treino);
 	}
 	
 	public void delete(Long id) {
-		terinoRepository.deleteById(id);
+		treinoRepository.deleteById(id);
 	}
 	
 	public void syncFormulariosRespostasNovaCompra(String spreadsheet, String range, String tipoTreino, String plano) throws GeneralSecurityException, IOException, ParseException {
@@ -85,7 +88,7 @@ public class TreinoService {
    }
 	
 	private Boolean verificaSeJaImportouHoje(Date dataRespostaFormulario, String email) {
-		return terinoRepository.findTreinoByDataRespostaAndEmail(dataRespostaFormulario, email) != null;
+		return treinoRepository.findTreinoByDataRespostaAndEmail(dataRespostaFormulario, email) != null;
 	}
 
 	private Date pegaDataResposta(Date dataResposta) {
@@ -130,10 +133,9 @@ public class TreinoService {
 		int sequencia = 1;
 		Treino ultimoTreino = null;
 		if(isRenovacao){
-			List<Treino> treinos = terinoRepository.buscaTreinosByIdAluno(alunoCriado.getIdAluno());
+			List<Treino> treinos = treinoRepository.buscaTreinosByIdAluno(alunoCriado.getIdAluno());
 			if(treinos != null && treinos.size() > 0){
 				ultimoTreino = treinos.get(0); 
-				sequencia = ultimoTreino.getSequenciaTreino() + 1;
 			}
 		}
 		Treino treino = new Treino();
@@ -148,8 +150,45 @@ public class TreinoService {
 		}
 		treino.setAluno(alunoCriado);
 		treino.setSequenciaTreino(sequencia);
-		terinoRepository.save(treino);
+		treinoRepository.save(treino);
+	}
 	
+	public void verificaReentradasTreinos(){
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE,0);
+		cal.set(Calendar.SECOND,0);
+		cal.set(Calendar.MILLISECOND,0);
+		List<Treino> treinosReentradas = treinoRepository.buscaTreinosReentradas(cal.getTime());
+		List<Treino> treinosUpdateReentradas = new ArrayList<>();
+		for (Treino treino : treinosReentradas){
+			
+			Calendar calhj = Calendar.getInstance();
+			LocalDate dataHoje = LocalDate.of(calhj.get(Calendar.YEAR), calhj.get(Calendar.MONTH)+1, calhj.get(Calendar.DAY_OF_MONTH));
+			
+			Calendar calDtReentrada = Calendar.getInstance();
+			calDtReentrada.setTime(treino.getDataReentrada());
+			LocalDate dataReentrada = LocalDate.of(calDtReentrada.get(Calendar.YEAR), calDtReentrada.get(Calendar.MONTH)+1, calDtReentrada.get(Calendar.DAY_OF_MONTH));
+			
+			Period p = Period.between(dataHoje, dataReentrada);
+			
+			if(p.getMonths() == 0 && p.getDays() <= 7){
+				treino.setReentrou(1);
+				treinosUpdateReentradas.add(treino);
+				
+				Treino treinoRentrada = new Treino(treino.getObservacao(), null, null, null, "NAOENVIADO",null, treino.getPlano(), null, 
+						0, treino.getAluno(), treino.getProfessor());
+				treinoRentrada.setIdTreino(null);
+				treinoRentrada.setDataRespostaFormulario(treino.getDataReentrada());
+				String tipoTreino = treino.getTipoTreino().substring(1);
+				treinoRentrada.setSequenciaTreino(treino.getSequenciaTreino() + 1);
+				treinoRentrada.setTipoTreino(treinoRentrada.getSequenciaTreino() +""+ tipoTreino);
+				treinoRepository.save(treinoRentrada);
+			}
+			
+		}
+		
 	}
 	
 	private Aluno criaAlunoRenovacao(List<Object> row, Date dataRespostaFormulario, SimpleDateFormat formatterHora, String spreadsheet) throws ParseException {
@@ -194,7 +233,7 @@ public class TreinoService {
 	
 	public Professor verificaResposalvelTreino(){
 		List<Professor> profs = profRepository.findAll();
-		List<Treino> treinos = terinoRepository.findAllByTipoTreinoIgnoreCaseContainingOrderByIdTreinoDesc("1-");
+		List<Treino> treinos = treinoRepository.findAllByTipoTreinoIgnoreCaseContainingOrderByIdTreinoDesc("1-");
 		for(Professor prof : profs){
 			if(treinos != null && treinos.size() > 0){
 				Treino treino1 = treinos.get(0);
@@ -217,10 +256,14 @@ public class TreinoService {
 	}
 
 	private Professor verificaResposalvelTreinoRenovacao(long idAluno) {
-		List<Treino> treinos = terinoRepository.buscaTreinosByIdAluno(idAluno);
+		List<Treino> treinos = treinoRepository.buscaTreinosByIdAluno(idAluno);
 		if(treinos != null && treinos.size() > 0)
 			return treinos.get(0).getProfessor();
 		return verificaResposalvelTreino();
+	}
+
+	public List<Treino> buscaTreinosReentradas(Date time) {
+		return treinoRepository.buscaTreinosReentradas(time);
 	}
 
 }

@@ -57,14 +57,9 @@ public class Treino implements Serializable {
 	@Column(name = "seq_treino")
 	private Integer sequenciaTreino;
 	
-	public Integer getSequenciaTreino() {
-		return sequenciaTreino;
-	}
-
-	public void setSequenciaTreino(Integer sequenciaTreino) {
-		this.sequenciaTreino = sequenciaTreino;
-	}
-
+	@Column(name = "reentrou")
+	private Integer reentrou;
+	
 	@ManyToOne(cascade=CascadeType.MERGE)
 	@JoinColumn(name = "id_aluno")
     private Aluno aluno;
@@ -73,6 +68,23 @@ public class Treino implements Serializable {
 	@JoinColumn(name = "id_professor")
     private Professor professor;
 	
+	public Treino(String observacao, Date dataRespostaFormulario, Date dataEnvioTreino, Date dataReentrada,
+			String status, String tipoTreino, String plano, Integer sequenciaTreino, Integer reentrou, Aluno aluno,
+			Professor professor) {
+		super();
+		this.observacao = observacao;
+		this.dataRespostaFormulario = dataRespostaFormulario;
+		this.dataEnvioTreino = dataEnvioTreino;
+		this.dataReentrada = dataReentrada;
+		this.status = status;
+		this.tipoTreino = tipoTreino;
+		this.plano = plano;
+		this.sequenciaTreino = sequenciaTreino;
+		this.reentrou = reentrou;
+		this.aluno = aluno;
+		this.professor = professor;
+	}
+
 	public Treino() {
 	}
 
@@ -153,7 +165,9 @@ public class Treino implements Serializable {
 		cal.setTime(dataRespostaFormulario);
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate retorno = LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH));
-		retorno = retorno.plusDays(7);
+		if (this.sequenciaTreino == 1) {
+			retorno = retorno.plusDays(7);
+		}
 		return retorno.format(dateFormatter);
 	}
 	
@@ -165,10 +179,9 @@ public class Treino implements Serializable {
 		cal.setTime(dataRespostaFormulario);
 		LocalDate dataLimite = LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH));
 		dataLimite = dataLimite.plusDays(7);
-		
 		Period p = Period.between(dataHoje, dataLimite);
 		if(p.getYears() > 0 || p.getMonths() > 0)
-			return "background-color: #FF6347"; //vermelho
+			return "background-color: #32CD32"; //verde
 		
 		if(p.getDays() >= 4)
 			return "background-color: #32CD32"; //verde
@@ -180,7 +193,7 @@ public class Treino implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Treino [idTreino=" + idTreino + ", observacao=" + observacao + ", dataRespostaFormulario="
+		return "Treino [idTreino=" + idTreino + ", observacao=" + observacao + ", dataRespostaFormulario=" + ", reentrou=" + reentrou
 				+ dataRespostaFormulario + ", dataEnvioTreino=" + dataEnvioTreino + ", status=" + status + ", dataReentrada=" + dataReentrada 
 				+ ", tipoTreino=" + tipoTreino + ", plano=" + plano + ", sequenciaTreino=" + sequenciaTreino
 				+ ", aluno=" + aluno + ", professor=" + professor + "]";
@@ -295,6 +308,22 @@ public class Treino implements Serializable {
 
 	public void setDataReentrada(Date dataReentrada) {
 		this.dataReentrada = dataReentrada;
+	}
+	
+	public Integer getReentrou() {
+		return reentrou;
+	}
+
+	public void setReentrou(Integer reentrou) {
+		this.reentrou = reentrou;
+	}
+
+	public Integer getSequenciaTreino() {
+		return sequenciaTreino;
+	}
+
+	public void setSequenciaTreino(Integer sequenciaTreino) {
+		this.sequenciaTreino = sequenciaTreino;
 	}
 
 }

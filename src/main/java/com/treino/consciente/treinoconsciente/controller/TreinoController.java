@@ -47,6 +47,7 @@ public class TreinoController {
 	
 	@RequestMapping("/sync")
 	public String sincronizar(Model model) {
+		treinoService.verificaReentradasTreinos();
 		try {
 			treinoService.syncFormulariosRespostas();
 		} catch (GeneralSecurityException | IOException | java.text.ParseException e) {
@@ -57,11 +58,6 @@ public class TreinoController {
 	    model.addAttribute("treinos", treinos);
 		return "home";
 	}
-	
-//	@GetMapping("/formulario")
-//	public String formulario(Model model) { 
-//		return "formulario";
-//	}
 	
 	@GetMapping("/add")
 	public String add(Treino treino, Model model) { 
