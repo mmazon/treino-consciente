@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.treino.consciente.treinoconsciente.model.Treino;
 import com.treino.consciente.treinoconsciente.service.AlunoService;
@@ -74,12 +76,10 @@ public class TreinoController {
 		return add(new Treino(), model);
 	}
 	
-	@GetMapping("/delete/{id}")
-	public String delete(@PathVariable("id") Long id) {
-		
+	@RequestMapping(value = "/delete/id", method = RequestMethod.GET)
+	public String delete(@RequestParam("id") Long id, Model model) {
 		treinoService.delete(id);
-		
-		return findAll(null);
+		return findAll(model);
 	}
 
 	@PostMapping("/save")
