@@ -2,10 +2,6 @@ package com.treino.consciente.treinoconsciente.controller;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.treino.consciente.treinoconsciente.model.Treino;
-import com.treino.consciente.treinoconsciente.service.AlunoService;
 import com.treino.consciente.treinoconsciente.service.ProfessorService;
 import com.treino.consciente.treinoconsciente.service.TreinoService;
 
@@ -33,8 +28,6 @@ public class TreinoController {
 	
 	@Autowired
 	private TreinoService treinoService;
-	@Autowired
-	private AlunoService alunoService;
 	@Autowired
 	private ProfessorService profService;
 	
@@ -86,15 +79,6 @@ public class TreinoController {
 	public String save(@ModelAttribute Treino treino, BindingResult result, Model model) {
 		if(result.hasErrors()) {
 			return add(treino, model);
-		}
-		treino.setProfessor(profService.findOne(treino.getProfessor().getIdProfessor()).get());
-		treino.setAluno(alunoService.findOne(treino.getAluno().getIdAluno()).get());
-		if(treino.getStatus().equals("ENVIADO")){
-			treino.setDataEnvioTreino(new Date());
-			Calendar calhj = Calendar.getInstance();
-			LocalDate dataHoje = LocalDate.of(calhj.get(Calendar.YEAR), calhj.get(Calendar.MONTH)+1, calhj.get(Calendar.DAY_OF_MONTH));
-			dataHoje = dataHoje.plusDays(30);
-			treino.setDataReentrada(Date.from(dataHoje.atStartOfDay(ZoneId.systemDefault()).toInstant())); 
 		}
 		treinoService.save(treino);
 		return findAll(model);

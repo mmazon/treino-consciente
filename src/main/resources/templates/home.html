@@ -59,8 +59,7 @@
 <!-- 							<td th:text="${#dates.format(treino.dataTreino, 'dd/MM/yyyy')}"></td> -->
 <!-- 							<td th:text="${treino.limiteEnvio}" ></td> -->
 							
-							<td th:text="${treino.limiteEnvio}"  th:style="${treino.corFundoTreino}" ></td>
-							
+							<td th:text="${treino.limiteEnvio}"  th:style="${treino.corFundoTreino}" th:classappend="${treino.piscaFundo == true} ? mydiv : other"></td>
 							<td>
 								<div class="btn-group pull-right">
 							   		<a class="btn btn-sm btn-primary" th:href="@{/edit/{id}(id=${treino.idTreino})}" >Editar</a>

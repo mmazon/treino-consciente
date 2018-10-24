@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -57,8 +58,35 @@ public class TreinoService {
 		return treinoRepository.findById(id);
 	}
 	
-	public Treino save(Treino Treino) {
-		return treinoRepository.save(Treino);
+	public Treino save(Treino treino) {
+		treino.setProfessor(profRepository.findById(treino.getProfessor().getIdProfessor()).get());
+		treino.setAluno(alunoRepository.findById(treino.getAluno().getIdAluno()).get());
+		if(treino.getStatus().equals("ENVIADO")){
+			treino.setDataEnvioTreino(new Date());
+			Calendar calhj = Calendar.getInstance();
+			LocalDate dataPlus30 = LocalDate.of(calhj.get(Calendar.YEAR), calhj.get(Calendar.MONTH)+1, calhj.get(Calendar.DAY_OF_MONTH));
+			dataPlus30 = dataPlus30.plusDays(30);
+			if(isFinalPlano(treino)){
+				treino.setDataFinalTreino(Date.from(dataPlus30.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+				treino.setRenovou(0);
+			}else{
+				treino.setDataReentrada(Date.from(dataPlus30.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			}
+		}
+		return treinoRepository.save(treino);
+	}
+	
+	private boolean isFinalPlano(Treino treino) {
+		String plano = treino.getTipoTreino().substring(treino.getTipoTreino().length() - 2);
+		if(treino.getSequenciaTreino().toString().equals(plano)){
+			return true;
+		}
+		plano = plano.substring(1); //para treino com o hifem no plano (3-3, 1-1)
+		if(treino.getSequenciaTreino().toString().equals(plano)){
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public void delete(Long id) {
@@ -188,10 +216,13 @@ public class TreinoService {
 				treino.setReentrou(1);
 				treinosUpdateReentradas.add(treino);
 				
+				dataReentrada = dataReentrada.minusDays(7);
+				Date date = Date.from(dataReentrada.atStartOfDay(ZoneId.systemDefault()).toInstant());
+				
 				Treino treinoRentrada = new Treino(treino.getObservacao(), null, null, null, "NAOENVIADO",null, treino.getPlano(), null, 
 						0, treino.getAluno(), treino.getProfessor());
 				treinoRentrada.setIdTreino(null);
-				treinoRentrada.setDataRespostaFormulario(treino.getDataReentrada());
+				treinoRentrada.setDataRespostaFormulario(date);
 				String tipoTreino = treino.getTipoTreino().substring(1);
 				treinoRentrada.setSequenciaTreino(treino.getSequenciaTreino() + 1);
 				treinoRentrada.setTipoTreino(treinoRentrada.getSequenciaTreino() +""+ tipoTreino);
