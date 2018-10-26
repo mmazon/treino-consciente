@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.treino.consciente.treinoconsciente.model.Treino;
+import com.treino.consciente.treinoconsciente.service.MailService;
 import com.treino.consciente.treinoconsciente.service.ProfessorService;
 import com.treino.consciente.treinoconsciente.service.TreinoService;
 
@@ -30,11 +31,18 @@ public class TreinoController {
 	private TreinoService treinoService;
 	@Autowired
 	private ProfessorService profService;
+	@Autowired
+	private MailService mailService;
 	
 	Logger logger = LoggerFactory.getLogger(TreinoController.class);
 	
 	@RequestMapping("/")
 	public String findAll(Model model) {
+		
+//		mailService.sendMail("Renovação", "html_email_renovacao", "moacir.mazon@gmail.com");
+//		mailService.sendMail("Ainda dá tempo!", "html_email_ainda_tempo", "moacir.mazon@gmail.com");
+//		mailService.sendMail("Pesquisa de Satisfação", "html_email_pesq_qualidade", "moacir.mazon@gmail.com");
+		
 		List<Treino> treinos = treinoService.findAllByStatus("NAOENVIADO");
 	    model.addAttribute("treinos", treinos);
 		return "home";
