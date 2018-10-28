@@ -52,7 +52,7 @@
 					</thead>
 					<tbody>
 						<tr th:each="treino : ${treinos}">
-							<td th:text="${treino.aluno.nome}"></td>
+							<td> <a target="_blank" th:href="${treino.aluno.linkFormulario}"><span th:text="${treino.aluno.nome}"/></a></td>
 							<td th:text="${treino.tipoTreino}"></td>
 							<td th:text="${treino.plano}"></td>
 							<td th:text="${treino.professor.nome}"></td>

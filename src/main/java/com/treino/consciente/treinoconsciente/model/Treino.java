@@ -65,6 +65,15 @@ public class Treino implements Serializable {
 	@Column(name = "reentrou")
 	private Integer reentrou;
 	
+	@Column(name = "enviou_mail_renov")
+	private Integer enviouMailRenov;
+	
+	@Column(name = "enviou_mail_pesq")
+	private Integer enviouMailPesq;
+	
+	@Column(name = "enviou_mail_ainda_tempo")
+	private Integer enviouMailAindaTempo;
+	
 	@Column(name = "renovou")
 	private Integer renovou;
 	
@@ -224,10 +233,13 @@ public class Treino implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Treino [idTreino=" + idTreino + ", observacao=" + observacao + ", dataRespostaFormulario=" + dataRespostaFormulario + ", reentrou=" + reentrou
-				+ ", dataEnvioTreino=" + dataEnvioTreino + ", status=" + status + ", dataReentrada=" + dataReentrada 
-				+ ", tipoTreino=" + tipoTreino + ", plano=" + plano + ", sequenciaTreino=" + sequenciaTreino
-				+ ", aluno=" + aluno + ", professor=" + professor + ", dataFinalTreino=" + dataFinalTreino + ", renovou=" + renovou +"]";
+		return "Treino [idTreino=" + idTreino + ", observacao=" + observacao + ", dataRespostaFormulario="
+				+ dataRespostaFormulario + ", dataEnvioTreino=" + dataEnvioTreino + ", dataReentrada=" + dataReentrada
+				+ ", dataFinalTreino=" + dataFinalTreino + ", status=" + status + ", tipoTreino=" + tipoTreino
+				+ ", plano=" + plano + ", sequenciaTreino=" + sequenciaTreino + ", reentrou=" + reentrou
+				+ ", enviouMailRenov=" + enviouMailRenov + ", enviouMailPesq=" + enviouMailPesq
+				+ ", enviouMailAindaTempo=" + enviouMailAindaTempo + ", renovou=" + renovou + ", aluno=" + aluno
+				+ ", professor=" + professor + ", piscaFundo=" + piscaFundo + "]";
 	}
 
 	@Override
@@ -236,11 +248,19 @@ public class Treino implements Serializable {
 		int result = 1;
 		result = prime * result + ((aluno == null) ? 0 : aluno.hashCode());
 		result = prime * result + ((dataEnvioTreino == null) ? 0 : dataEnvioTreino.hashCode());
+		result = prime * result + ((dataFinalTreino == null) ? 0 : dataFinalTreino.hashCode());
+		result = prime * result + ((dataReentrada == null) ? 0 : dataReentrada.hashCode());
 		result = prime * result + ((dataRespostaFormulario == null) ? 0 : dataRespostaFormulario.hashCode());
+		result = prime * result + ((enviouMailAindaTempo == null) ? 0 : enviouMailAindaTempo.hashCode());
+		result = prime * result + ((enviouMailPesq == null) ? 0 : enviouMailPesq.hashCode());
+		result = prime * result + ((enviouMailRenov == null) ? 0 : enviouMailRenov.hashCode());
 		result = prime * result + ((idTreino == null) ? 0 : idTreino.hashCode());
 		result = prime * result + ((observacao == null) ? 0 : observacao.hashCode());
+		result = prime * result + ((piscaFundo == null) ? 0 : piscaFundo.hashCode());
 		result = prime * result + ((plano == null) ? 0 : plano.hashCode());
 		result = prime * result + ((professor == null) ? 0 : professor.hashCode());
+		result = prime * result + ((reentrou == null) ? 0 : reentrou.hashCode());
+		result = prime * result + ((renovou == null) ? 0 : renovou.hashCode());
 		result = prime * result + ((sequenciaTreino == null) ? 0 : sequenciaTreino.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result + ((tipoTreino == null) ? 0 : tipoTreino.hashCode());
@@ -273,11 +293,46 @@ public class Treino implements Serializable {
 		} else if (!dataEnvioTreino.equals(other.dataEnvioTreino)) {
 			return false;
 		}
+		if (dataFinalTreino == null) {
+			if (other.dataFinalTreino != null) {
+				return false;
+			}
+		} else if (!dataFinalTreino.equals(other.dataFinalTreino)) {
+			return false;
+		}
+		if (dataReentrada == null) {
+			if (other.dataReentrada != null) {
+				return false;
+			}
+		} else if (!dataReentrada.equals(other.dataReentrada)) {
+			return false;
+		}
 		if (dataRespostaFormulario == null) {
 			if (other.dataRespostaFormulario != null) {
 				return false;
 			}
 		} else if (!dataRespostaFormulario.equals(other.dataRespostaFormulario)) {
+			return false;
+		}
+		if (enviouMailAindaTempo == null) {
+			if (other.enviouMailAindaTempo != null) {
+				return false;
+			}
+		} else if (!enviouMailAindaTempo.equals(other.enviouMailAindaTempo)) {
+			return false;
+		}
+		if (enviouMailPesq == null) {
+			if (other.enviouMailPesq != null) {
+				return false;
+			}
+		} else if (!enviouMailPesq.equals(other.enviouMailPesq)) {
+			return false;
+		}
+		if (enviouMailRenov == null) {
+			if (other.enviouMailRenov != null) {
+				return false;
+			}
+		} else if (!enviouMailRenov.equals(other.enviouMailRenov)) {
 			return false;
 		}
 		if (idTreino == null) {
@@ -294,6 +349,13 @@ public class Treino implements Serializable {
 		} else if (!observacao.equals(other.observacao)) {
 			return false;
 		}
+		if (piscaFundo == null) {
+			if (other.piscaFundo != null) {
+				return false;
+			}
+		} else if (!piscaFundo.equals(other.piscaFundo)) {
+			return false;
+		}
 		if (plano == null) {
 			if (other.plano != null) {
 				return false;
@@ -306,6 +368,20 @@ public class Treino implements Serializable {
 				return false;
 			}
 		} else if (!professor.equals(other.professor)) {
+			return false;
+		}
+		if (reentrou == null) {
+			if (other.reentrou != null) {
+				return false;
+			}
+		} else if (!reentrou.equals(other.reentrou)) {
+			return false;
+		}
+		if (renovou == null) {
+			if (other.renovou != null) {
+				return false;
+			}
+		} else if (!renovou.equals(other.renovou)) {
 			return false;
 		}
 		if (sequenciaTreino == null) {
@@ -364,4 +440,29 @@ public class Treino implements Serializable {
 	public void setDataFinalTreino(Date dataFinalTreino) {
 		this.dataFinalTreino = dataFinalTreino;
 	}
+
+	public Integer getEnviouMailRenov() {
+		return enviouMailRenov;
+	}
+
+	public void setEnviouMailRenov(Integer enviouMailRenov) {
+		this.enviouMailRenov = enviouMailRenov;
+	}
+
+	public Integer getEnviouMailPesq() {
+		return enviouMailPesq;
+	}
+
+	public void setEnviouMailPesq(Integer enviouMailPesq) {
+		this.enviouMailPesq = enviouMailPesq;
+	}
+
+	public Integer getEnviouMailAindaTempo() {
+		return enviouMailAindaTempo;
+	}
+
+	public void setEnviouMailAindaTempo(Integer enviouMailAindaTempo) {
+		this.enviouMailAindaTempo = enviouMailAindaTempo;
+	}
+	
 }

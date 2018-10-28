@@ -36,6 +36,8 @@ public class TreinoService {
 	
 	@Autowired
 	private ProfessorRepository profRepository;
+	@Autowired
+	private MailService mailService;
 	
     Logger logger = LoggerFactory.getLogger(TreinoService.class);
 	
@@ -62,7 +64,8 @@ public class TreinoService {
 		treino.setProfessor(profRepository.findById(treino.getProfessor().getIdProfessor()).get());
 		treino.setAluno(alunoRepository.findById(treino.getAluno().getIdAluno()).get());
 		if(treino.getStatus().equals("ENVIADO")){
-			treino.setDataEnvioTreino(new Date());
+			if(treino.getDataEnvioTreino() == null)
+				treino.setDataEnvioTreino(new Date());
 			Calendar calhj = Calendar.getInstance();
 			LocalDate dataPlus30 = LocalDate.of(calhj.get(Calendar.YEAR), calhj.get(Calendar.MONTH)+1, calhj.get(Calendar.DAY_OF_MONTH));
 			dataPlus30 = dataPlus30.plusDays(30);
@@ -153,6 +156,7 @@ public class TreinoService {
 			   Date dataRespostaFormulario = pegaDataResposta(formatterDataHora.parse((String)row.get(0)));
 			   String email = (String)row.get(1);
 			   Boolean jaImportou = verificaSeJaImportouHoje(dataRespostaFormulario, email);
+			   setaRenovouNoUltimoTreino(email);
 			   
 			   if(!jaImportou){
 				   Aluno alunoCriado = criaAlunoRenovacao(row, dataRespostaFormulario, formatterHora, spreadsheet);
@@ -161,6 +165,15 @@ public class TreinoService {
 		   }
       }
   }
+
+	public void setaRenovouNoUltimoTreino(String email) {
+		List<Treino> treinos = treinoRepository.findLastTreinoByEmail(email);
+		if(treinos != null && treinos.size() > 0){
+			Treino ultimoTreino = treinos.get(0);
+			ultimoTreino.setRenovou(1);
+			treinoRepository.save(ultimoTreino);
+		}
+	}
 
 	private List<List<Object>> consultaGoogleSpreasheetTreinos(String spreadsheet, String range)
 			throws GeneralSecurityException, IOException {
@@ -306,6 +319,85 @@ public class TreinoService {
 
 	public List<Treino> buscaTreinosReentradas(Date time) {
 		return treinoRepository.buscaTreinosReentradas(time);
+	}
+	
+	public void verificaEnviarEmailRenovacao(){
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE,0);
+		cal.set(Calendar.SECOND,0);
+		cal.set(Calendar.MILLISECOND,0);
+		List<Treino> treinosRenovacao = treinoRepository.buscaTreinosRenovacao(cal.getTime());
+		for (Treino treino : treinosRenovacao){
+			
+			Calendar calhj = Calendar.getInstance();
+			LocalDate dataHoje = LocalDate.of(calhj.get(Calendar.YEAR), calhj.get(Calendar.MONTH)+1, calhj.get(Calendar.DAY_OF_MONTH));
+			
+			Calendar calDtRenovacao = Calendar.getInstance();
+			calDtRenovacao.setTime(treino.getDataFinalTreino());
+			LocalDate dataRenovcao = LocalDate.of(calDtRenovacao.get(Calendar.YEAR), calDtRenovacao.get(Calendar.MONTH)+1, calDtRenovacao.get(Calendar.DAY_OF_MONTH));
+			
+			Period p = Period.between(dataHoje, dataRenovcao);
+			
+			if(p.getMonths() == 0 && p.getDays() <= 7){
+//				String emailAluno = treino.getAluno().getEmail();
+				String emailAluno = "moacir.mazon@gmail.com";
+				mailService.sendMail("Renovação", "html_email_renovacao", emailAluno);
+				
+				treino.setEnviouMailRenov(1);				
+				treinoRepository.save(treino);
+			}
+		}
+	}
+	
+	public void verificaEnviarEmailPesquisa(){
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE,0);
+		cal.set(Calendar.SECOND,0);
+		cal.set(Calendar.MILLISECOND,0);
+		List<Treino> treinosPesquisa = treinoRepository.buscaTreinosPesquisa(cal.getTime());
+		for (Treino treino : treinosPesquisa){
+			
+//			String emailAluno = treino.getAluno().getEmail();
+			String emailAluno = "moacir.mazon@gmail.com";
+			mailService.sendMail("Pesquisa de Satisfação", "html_email_pesq_qualidade",emailAluno);
+			
+			treino.setEnviouMailPesq(1);				
+			treinoRepository.save(treino);
+		}
+	}
+	
+	public void verificaEnviarEmailAindaTempo(){
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE,0);
+		cal.set(Calendar.SECOND,0);
+		cal.set(Calendar.MILLISECOND,0);
+		List<Treino> treinosAindaTempo = treinoRepository.buscaTreinosAindaTempo(cal.getTime());
+		for (Treino treino : treinosAindaTempo){
+			
+			Calendar calhj = Calendar.getInstance();
+			LocalDate dataHoje = LocalDate.of(calhj.get(Calendar.YEAR), calhj.get(Calendar.MONTH)+1, calhj.get(Calendar.DAY_OF_MONTH));
+			
+			Calendar calDtFinalTreino = Calendar.getInstance();
+			calDtFinalTreino.setTime(treino.getDataFinalTreino());
+			LocalDate dataRenovcao = LocalDate.of(calDtFinalTreino.get(Calendar.YEAR), calDtFinalTreino.get(Calendar.MONTH)+1, calDtFinalTreino.get(Calendar.DAY_OF_MONTH));
+			
+			Period p = Period.between(dataRenovcao, dataHoje);
+			
+			if(p.getMonths() == 0 && p.getDays() >= 7){
+//				String emailAluno = treino.getAluno().getEmail();
+				String emailAluno = "moacir.mazon@gmail.com";
+				mailService.sendMail("Ainda dá tempo!", "html_email_ainda_tempo", emailAluno);
+				
+				treino.setEnviouMailAindaTempo(1);				
+				treinoRepository.save(treino);
+			}
+		}
 	}
 
 }

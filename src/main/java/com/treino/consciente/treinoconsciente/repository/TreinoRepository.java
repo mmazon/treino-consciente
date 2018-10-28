@@ -26,6 +26,16 @@ public interface TreinoRepository extends JpaRepository<Treino, Long> {
 	@Query("SELECT t FROM treino t WHERE t.dataReentrada > ?1 and reentrou = 0 ")
 	List<Treino> buscaTreinosReentradas(Date data);
 	
+	@Query("SELECT t FROM treino t WHERE t.dataFinalTreino > ?1 and renovou = 0 and t.enviouMailRenov = 0")
+	List<Treino> buscaTreinosRenovacao(Date data);
+
+	@Query("SELECT t FROM treino t WHERE t.dataFinalTreino = ?1 and t.enviouMailPesq = 0")
+	List<Treino> buscaTreinosPesquisa(Date data);
 	
+	@Query("SELECT t FROM treino t WHERE t.dataFinalTreino < ?1 and renovou = 0 and t.enviouMailRenov = 1 and t.enviouMailAindaTempo = 0")
+	List<Treino> buscaTreinosAindaTempo(Date data);
+	
+	@Query("SELECT t FROM treino t WHERE t.aluno.email = ?1 ORDER BY idTreino DESC")
+	List<Treino> findLastTreinoByEmail(String email);
 
 }
