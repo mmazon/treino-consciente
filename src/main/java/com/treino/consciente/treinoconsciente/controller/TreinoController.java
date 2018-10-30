@@ -32,7 +32,6 @@ public class TreinoController {
 	@Autowired
 	private ProfessorService profService;
 	
-	
 	Logger logger = LoggerFactory.getLogger(TreinoController.class);
 	
 	@RequestMapping("/")
@@ -44,7 +43,6 @@ public class TreinoController {
 	
 	@RequestMapping("/sync")
 	public String sincronizar(Model model) {
-		treinoService.verificaReentradasTreinos();
 		try {
 			treinoService.syncFormulariosRespostas();
 		} catch (GeneralSecurityException | IOException | java.text.ParseException e) {

@@ -59,6 +59,9 @@ public class Treino implements Serializable {
 	@Column(name = "plano")
 	private String plano;
 	
+	@Column(name = "link_form")
+	private String linkForm;
+	
 	@Column(name = "seq_treino")
 	private Integer sequenciaTreino;
 	
@@ -96,6 +99,14 @@ public class Treino implements Serializable {
 	@Transient
 	private Boolean piscaFundo = false; //tcheee
 	
+	public String getLinkForm() {
+		return linkForm;
+	}
+
+	public void setLinkForm(String linkForm) {
+		this.linkForm = linkForm;
+	}
+
 	public Boolean getPiscaFundo() {
 		return piscaFundo;
 	}

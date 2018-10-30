@@ -47,6 +47,7 @@ public class TreinoService {
     private static final String SPREADSHEET_ID_RENOV_MES = "1wCyiScZNpQUmSaZ8m4xUE_IQjfzOYjMNAIGmWS4XYRk";
 	private static final String SPREADSHEET_ID_RENOV_TRI = "1vNJdUIvOBNW34jGQfAASv79h-KXeZZhRx6L3VqjB-m4";
 	private static final String SPREADSHEET_ID_RENOV_ANO = "1CpE3TeHMwRpTk9zH-0l1lceotPIiFOWtNPunJvEDdSA";
+	private static final Boolean DEBUG = false;
 	
 	public List<Treino> findAll() {
 		return treinoRepository.findAll();
@@ -96,7 +97,7 @@ public class TreinoService {
 		treinoRepository.deleteById(id);
 	}
 	
-	public void syncFormulariosRespostasNovaCompra(String spreadsheet, String range, String tipoTreino, String plano) throws GeneralSecurityException, IOException, ParseException {
+	public void syncFormulariosRespostasNovaCompra(String spreadsheet, String range, String tipoTreino, String plano, String forms) throws GeneralSecurityException, IOException, ParseException {
 		List<List<Object>> values = consultaGoogleSpreasheetTreinos(spreadsheet, range);
        
 	   if (values == null || values.isEmpty()) {
@@ -116,8 +117,8 @@ public class TreinoService {
 	    	   Boolean jaImportou = verificaSeJaImportouHoje(dataRespostaFormulario, email);
 
 	    	   if(!jaImportou){
-	    		   Aluno alunoCriado = criaAluno(row, dataRespostaFormulario, formatterHora, spreadsheet);
-	    		   criaTreino(verificaResposalvelTreino(), tipoTreino, plano, row, dataRespostaFormulario, alunoCriado, false);
+	    		   Aluno alunoCriado = criaAluno(row, dataRespostaFormulario, formatterHora);
+	    		   criaTreino(verificaResposalvelTreino(), tipoTreino, plano, row, dataRespostaFormulario, alunoCriado, false, forms);
 	    	   }
 	       }
 	   }
@@ -137,7 +138,7 @@ public class TreinoService {
 		return cal.getTime();
 	}
 
-	public void syncFormulariosRespostasRenovacao(String spreadsheet, String range, String tipoTreino, String plano) throws GeneralSecurityException, IOException, ParseException {
+	public void syncFormulariosRespostasRenovacao(String spreadsheet, String range, String tipoTreino, String plano, String forms) throws GeneralSecurityException, IOException, ParseException {
       List<List<Object>> values = consultaGoogleSpreasheetTreinos(spreadsheet, range);
       
       if (values == null || values.isEmpty()) {
@@ -159,8 +160,8 @@ public class TreinoService {
 			   setaRenovouNoUltimoTreino(email);
 			   
 			   if(!jaImportou){
-				   Aluno alunoCriado = criaAlunoRenovacao(row, dataRespostaFormulario, formatterHora, spreadsheet);
-				   criaTreino(verificaResposalvelTreinoRenovacao(alunoCriado.getIdAluno()), tipoTreino, plano, row, dataRespostaFormulario, alunoCriado, true);
+				   Aluno alunoCriado = criaAlunoRenovacao(row, dataRespostaFormulario, formatterHora);
+				   criaTreino(verificaResposalvelTreinoRenovacao(alunoCriado.getIdAluno()), tipoTreino, plano, row, dataRespostaFormulario, alunoCriado, true, forms);
 			   }
 		   }
       }
@@ -181,7 +182,7 @@ public class TreinoService {
 		return gr.readSheet(range, spreadsheet);
 	}
 
-	private void criaTreino(Professor professor, String tipoTreino, String plano, List<Object> row, Date dataRespostaFormulario, Aluno alunoCriado, Boolean isRenovacao) throws ParseException {
+	private void criaTreino(Professor professor, String tipoTreino, String plano, List<Object> row, Date dataRespostaFormulario, Aluno alunoCriado, Boolean isRenovacao, String forms) throws ParseException {
 		int sequencia = 1;
 		Treino ultimoTreino = null;
 		if(isRenovacao){
@@ -195,6 +196,7 @@ public class TreinoService {
 		treino.setStatus("NAOENVIADO");
 		treino.setTipoTreino(sequencia +""+ tipoTreino);
 		treino.setPlano(plano);
+		treino.setLinkForm(forms);
 		if(ultimoTreino != null && ultimoTreino.getProfessor() != null){
 			treino.setProfessor(ultimoTreino.getProfessor());
 		}else{
@@ -239,14 +241,18 @@ public class TreinoService {
 				String tipoTreino = treino.getTipoTreino().substring(1);
 				treinoRentrada.setSequenciaTreino(treino.getSequenciaTreino() + 1);
 				treinoRentrada.setTipoTreino(treinoRentrada.getSequenciaTreino() +""+ tipoTreino);
+				treinoRentrada.setLinkForm(treino.getLinkForm());
 				treinoRepository.save(treinoRentrada);
 			}
 			
 		}
+		if(treinosUpdateReentradas != null && treinosUpdateReentradas.size() > 0){
+			treinoRepository.saveAll(treinosUpdateReentradas);
+		}
 		
 	}
 	
-	private Aluno criaAlunoRenovacao(List<Object> row, Date dataRespostaFormulario, SimpleDateFormat formatterHora, String spreadsheet) throws ParseException {
+	private Aluno criaAlunoRenovacao(List<Object> row, Date dataRespostaFormulario, SimpleDateFormat formatterHora) throws ParseException {
 		Aluno aluno = alunoRepository.findByEmail((String)row.get(1));
 		if(aluno == null || aluno.getIdAluno() == null){		
 			aluno = new Aluno();
@@ -255,11 +261,10 @@ public class TreinoService {
 		}
 		aluno.setPeso((String)row.get(4));
 		aluno.setDataRespostaFormulario(dataRespostaFormulario);
-		aluno.setLinkFormulario("https://docs.google.com/spreadsheets/d/" + spreadsheet);
 		return alunoRepository.save(aluno);
 	}
 
-	private Aluno criaAluno(List<Object> row, Date dataRespostaFormulario, SimpleDateFormat formatter2, String spreadsheet) throws ParseException {
+	private Aluno criaAluno(List<Object> row, Date dataRespostaFormulario, SimpleDateFormat formatter2) throws ParseException {
 		Aluno aluno = alunoRepository.findByEmail((String)row.get(1));
 		if(aluno == null || aluno.getIdAluno() == null){		
 			aluno = new Aluno();
@@ -271,18 +276,17 @@ public class TreinoService {
 		    aluno.setCidadeUf((String)row.get(8));
 		}
 		aluno.setDataRespostaFormulario(dataRespostaFormulario);
-		aluno.setLinkFormulario("https://docs.google.com/spreadsheets/d/" + spreadsheet);
 		return alunoRepository.save(aluno);
 	}
 	
 	public void syncFormulariosRespostas() throws GeneralSecurityException, IOException, ParseException {
-		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_MES, "Respostas ao formulário 1", "-1", "Mensal");
-		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_TRI, "Respostas ao formulário 2", "-3", "Trimestral");
-		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_ANO, "Respostas ao formulário 1", "-12", "Anual");
+		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_MES, "Respostas ao formulário 1", "-1", "Mensal", "https://docs.google.com/forms/d/1Muinme65XOPwJB1x41cpKbwOUFoVShEwtVAbqHRABdA/edit");
+		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_TRI, "Respostas ao formulário 2", "-3", "Trimestral", "https://docs.google.com/forms/d/1eg642m8OawXgn38ymZVEVJfeBaDAbKtrwySar8xAhXM/edit");
+		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_ANO, "Respostas ao formulário 1", "-12", "Anual", "https://docs.google.com/forms/d/1pPyQ_o99kMKxFrUv8RvIjOMjir4YKVi9IpGgY5Y6cJE/edit");
 		
-		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_TRI, "Respostas ao formulário 1", "-3", "Renov. Trimestral");
-		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_MES, "Respostas ao formulário 1", "-1", "Renov. Mensal");
-		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_ANO, "Respostas ao formulário 1", "-12", "Renov. Anual");
+		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_TRI, "Respostas ao formulário 1", "-3", "Renov. Trimestral", "https://docs.google.com/forms/d/1uCEWwGPbMUltTnaUIFkU05ldrQWJzXpjXbSMV7erGeY/edit");
+		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_MES, "Respostas ao formulário 1", "-1", "Renov. Mensal", "https://docs.google.com/forms/d/1XDcPnCXOOoBca7ua5bvz6gireCTM4xNCA6jFEycz2Iw/edit");
+		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_ANO, "Respostas ao formulário 1", "-12", "Renov. Anual", "https://docs.google.com/forms/d/1mRyeMCBdoPBvfrBgoOGnye-R1_PuemQccS2ovW5ikHg/edit");
 		
 	}
 	
@@ -341,10 +345,12 @@ public class TreinoService {
 			Period p = Period.between(dataHoje, dataRenovcao);
 			
 			if(p.getMonths() == 0 && p.getDays() <= 7){
-//				String emailAluno = treino.getAluno().getEmail();
-				String emailAluno = "moacir.mazon@gmail.com";
-				mailService.sendMail("Renovação", "html_email_renovacao", emailAluno);
-				
+				String emailAluno = treino.getAluno().getEmail();
+				if(DEBUG){
+					mailService.sendMail("Renovação", "html_email_renovacao", "moacir.mazon@gmail.com");
+				}else{
+					mailService.sendMail("Renovação", "html_email_renovacao", emailAluno);
+				}
 				treino.setEnviouMailRenov(1);				
 				treinoRepository.save(treino);
 			}
@@ -361,10 +367,12 @@ public class TreinoService {
 		List<Treino> treinosPesquisa = treinoRepository.buscaTreinosPesquisa(cal.getTime());
 		for (Treino treino : treinosPesquisa){
 			
-//			String emailAluno = treino.getAluno().getEmail();
-			String emailAluno = "moacir.mazon@gmail.com";
-			mailService.sendMail("Pesquisa de Satisfação", "html_email_pesq_qualidade",emailAluno);
-			
+			String emailAluno = treino.getAluno().getEmail();
+			if(DEBUG){
+				mailService.sendMail("Pesquisa de Satisfação", "html_email_pesq_qualidade", "moacir.mazon@gmail.com");
+			}else{
+				mailService.sendMail("Pesquisa de Satisfação", "html_email_pesq_qualidade", emailAluno);
+			}
 			treino.setEnviouMailPesq(1);				
 			treinoRepository.save(treino);
 		}
@@ -390,10 +398,12 @@ public class TreinoService {
 			Period p = Period.between(dataRenovcao, dataHoje);
 			
 			if(p.getMonths() == 0 && p.getDays() >= 7){
-//				String emailAluno = treino.getAluno().getEmail();
-				String emailAluno = "moacir.mazon@gmail.com";
-				mailService.sendMail("Ainda dá tempo!", "html_email_ainda_tempo", emailAluno);
-				
+				String emailAluno = treino.getAluno().getEmail();
+				if(DEBUG){
+					mailService.sendMail("Ainda dá tempo!", "html_email_ainda_tempo", "moacir.mazon@gmail.com");
+				}else{
+					mailService.sendMail("Ainda dá tempo!", "html_email_ainda_tempo", emailAluno);
+				}
 				treino.setEnviouMailAindaTempo(1);				
 				treinoRepository.save(treino);
 			}

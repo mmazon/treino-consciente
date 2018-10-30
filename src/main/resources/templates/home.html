@@ -52,13 +52,11 @@
 					</thead>
 					<tbody>
 						<tr th:each="treino : ${treinos}">
-							<td> <a target="_blank" th:href="${treino.aluno.linkFormulario}"><span th:text="${treino.aluno.nome}"/></a></td>
+							<td th:text="${treino.aluno.nome}"></td>
 							<td th:text="${treino.tipoTreino}"></td>
-							<td th:text="${treino.plano}"></td>
+<!-- 							<td th:text="${treino.plano}"></td> -->
+							 <td> <a target="_blank" th:href="${treino.linkForm}"><span th:text="${treino.plano}"/></a></td>
 							<td th:text="${treino.professor.nome}"></td>
-<!-- 							<td th:text="${#dates.format(treino.dataTreino, 'dd/MM/yyyy')}"></td> -->
-<!-- 							<td th:text="${treino.limiteEnvio}" ></td> -->
-							
 							<td th:text="${treino.limiteEnvio}"  th:style="${treino.corFundoTreino}" th:classappend="${treino.piscaFundo == true} ? mydiv : other"></td>
 							<td>
 								<div class="btn-group pull-right">
