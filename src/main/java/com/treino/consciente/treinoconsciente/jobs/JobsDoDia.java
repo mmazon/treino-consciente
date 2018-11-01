@@ -18,9 +18,10 @@ public class JobsDoDia {
 	@Autowired
 	private TreinoService treinoService;
 	private static final String TIME_ZONE = "America/Sao_Paulo";
+	
+//	@Scheduled(cron = "*/30 * * * * *", zone = TIME_ZONE)
 
 	@Scheduled(cron = "0 0 12 * * *", zone = TIME_ZONE)
-//	@Scheduled(cron = "*/30 * * * * *", zone = TIME_ZONE)
 	public void perform() throws Exception {
 		logger.warn("Job verificaEnviarEmailRenovacao Started at :" + new Date());
 		treinoService.verificaEnviarEmailRenovacao();

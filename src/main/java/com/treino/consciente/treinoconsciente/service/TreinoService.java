@@ -68,8 +68,11 @@ public class TreinoService {
 			if(treino.getDataEnvioTreino() == null)
 				treino.setDataEnvioTreino(new Date());
 			Calendar calhj = Calendar.getInstance();
+			calhj.setTime(treino.getDataEnvioTreino());
+
 			LocalDate dataPlus30 = LocalDate.of(calhj.get(Calendar.YEAR), calhj.get(Calendar.MONTH)+1, calhj.get(Calendar.DAY_OF_MONTH));
 			dataPlus30 = dataPlus30.plusDays(30);
+			
 			if(isFinalPlano(treino)){
 				treino.setDataFinalTreino(Date.from(dataPlus30.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 				treino.setRenovou(0);
