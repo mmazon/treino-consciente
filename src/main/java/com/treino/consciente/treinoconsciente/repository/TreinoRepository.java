@@ -23,16 +23,16 @@ public interface TreinoRepository extends JpaRepository<Treino, Long> {
 	@Query("SELECT t FROM treino t WHERE t.tipoTreino like ?1% AND t.plano not like ?2% ORDER BY idTreino DESC")
 	List<Treino> findTreinosByTipoAndPlano(String tipo, String plano);
 	
-	@Query("SELECT t FROM treino t WHERE t.dataReentrada > ?1 and reentrou = 0 ")
+	@Query("SELECT t FROM treino t WHERE t.dataReentrada > ?1 and (reentrou = 0 OR reentrou is NULL) ")
 	List<Treino> buscaTreinosReentradas(Date data);
 	
-	@Query("SELECT t FROM treino t WHERE t.dataFinalTreino > ?1 and renovou = 0 and t.enviouMailRenov = 0")
+	@Query("SELECT t FROM treino t WHERE t.dataFinalTreino > ?1 and (renovou = 0 OR renovou is NULL) and (t.enviouMailRenov = 0 OR t.enviouMailRenov is NULL)")
 	List<Treino> buscaTreinosRenovacao(Date data);
 
-	@Query("SELECT t FROM treino t WHERE t.dataFinalTreino = ?1 and t.enviouMailPesq = 0")
+	@Query("SELECT t FROM treino t WHERE t.dataFinalTreino = ?1 and (t.enviouMailPesq = 0 OR t.enviouMailPesq is NULL)")
 	List<Treino> buscaTreinosPesquisa(Date data);
 	
-	@Query("SELECT t FROM treino t WHERE t.dataFinalTreino < ?1 and renovou = 0 and t.enviouMailRenov = 1 and t.enviouMailAindaTempo = 0")
+	@Query("SELECT t FROM treino t WHERE t.dataFinalTreino < ?1 and (renovou = 0 OR renovou is NULL) and t.enviouMailRenov = 1 and (t.enviouMailAindaTempo = 0 OR t.enviouMailAindaTempo is NULL)")
 	List<Treino> buscaTreinosAindaTempo(Date data);
 	
 	@Query("SELECT t FROM treino t WHERE t.aluno.email = ?1 ORDER BY idTreino DESC")

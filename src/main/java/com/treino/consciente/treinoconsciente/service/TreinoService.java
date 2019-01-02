@@ -283,13 +283,13 @@ public class TreinoService {
 	}
 	
 	public void syncFormulariosRespostas() throws GeneralSecurityException, IOException, ParseException {
-		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_MES, "Respostas ao formulário 1", "-1", "Mensal", "https://docs.google.com/forms/d/1Muinme65XOPwJB1x41cpKbwOUFoVShEwtVAbqHRABdA/edit");
-		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_TRI, "Respostas ao formulário 2", "-3", "Trimestral", "https://docs.google.com/forms/d/1eg642m8OawXgn38ymZVEVJfeBaDAbKtrwySar8xAhXM/edit");
-		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_ANO, "Respostas ao formulário 1", "-12", "Anual", "https://docs.google.com/forms/d/1pPyQ_o99kMKxFrUv8RvIjOMjir4YKVi9IpGgY5Y6cJE/edit");
+		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_MES, "Respostas ao formulário 1", "-1", "Mensal", "https://docs.google.com/forms/d/1Muinme65XOPwJB1x41cpKbwOUFoVShEwtVAbqHRABdA/edit#responses");
+		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_TRI, "Respostas ao formulário 2", "-3", "Trimestral", "https://docs.google.com/forms/d/1eg642m8OawXgn38ymZVEVJfeBaDAbKtrwySar8xAhXM/edit#responses");
+		this.syncFormulariosRespostasNovaCompra(SPREADSHEET_ID_NOVO_ANO, "Respostas ao formulário 1", "-12", "Anual", "https://docs.google.com/forms/d/1pPyQ_o99kMKxFrUv8RvIjOMjir4YKVi9IpGgY5Y6cJE/edit#responses");
 		
-		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_TRI, "Respostas ao formulário 1", "-3", "Renov. Trimestral", "https://docs.google.com/forms/d/1uCEWwGPbMUltTnaUIFkU05ldrQWJzXpjXbSMV7erGeY/edit");
-		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_MES, "Respostas ao formulário 1", "-1", "Renov. Mensal", "https://docs.google.com/forms/d/1XDcPnCXOOoBca7ua5bvz6gireCTM4xNCA6jFEycz2Iw/edit");
-		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_ANO, "Respostas ao formulário 1", "-12", "Renov. Anual", "https://docs.google.com/forms/d/1mRyeMCBdoPBvfrBgoOGnye-R1_PuemQccS2ovW5ikHg/edit");
+		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_TRI, "Respostas ao formulário 1", "-3", "Renov. Trimestral", "https://docs.google.com/forms/d/1uCEWwGPbMUltTnaUIFkU05ldrQWJzXpjXbSMV7erGeY/edit#responses");
+		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_MES, "Respostas ao formulário 1", "-1", "Renov. Mensal", "https://docs.google.com/forms/d/1XDcPnCXOOoBca7ua5bvz6gireCTM4xNCA6jFEycz2Iw/edit#responses");
+		this.syncFormulariosRespostasRenovacao(SPREADSHEET_ID_RENOV_ANO, "Respostas ao formulário 1", "-12", "Renov. Anual", "https://docs.google.com/forms/d/1mRyeMCBdoPBvfrBgoOGnye-R1_PuemQccS2ovW5ikHg/edit#responses");
 		
 	}
 	

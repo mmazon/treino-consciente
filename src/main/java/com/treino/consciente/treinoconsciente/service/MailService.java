@@ -37,6 +37,7 @@ public class MailService {
 		
 		MimeMessage mail = mailSender.createMimeMessage();
 	    MimeMessageHelper helper = new MimeMessageHelper(mail);
+	    
 	    try {
 			helper.setTo(mailTo);
 			helper.setSubject(subject);
@@ -57,6 +58,8 @@ public class MailService {
 	
     public JavaMailSender getMailSender(String userName) {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setDefaultEncoding("UTF-8");
+        System.setProperty("mail.mime.charset", "utf8");
  
         mailSender.setHost("smtp.zoho.com");
         mailSender.setPort(587);
