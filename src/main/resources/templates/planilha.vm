@@ -1,0 +1,256 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+		 <head>
+		  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		  <title>Treino consciente</title>
+		  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		  
+		  <style>
+		  		body {
+		  			font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+		  		}
+				.treinos {
+				    border-collapse: collapse;
+				    width: 100%;
+				    font-size: 13px !important;
+				}
+				
+				.treinos td {
+				    padding: 8px;
+				 	text-align: center;   
+				}
+				
+				.treinos th {
+				    text-align: center ;
+				    background-color: #e4ebf2;
+				    padding: 8px;
+				}
+				
+				.pad-top-exer {
+					padding-top: 7px;
+				}
+				
+				.msgInicial{
+					 padding-top: 35px;
+					 text-align: center;
+					 font-size: 13px !important;
+				}
+				
+				.cabecario{
+					 font-size: 14px !important;
+					 border-collapse: collapse;
+				     width: 100%;
+				}
+				
+				.logo{
+				    width: 180px;
+				    height: 53px;
+				}
+				
+				
+			</style>
+		  
+		  
+		  
+		</head>
+		
+		<body style="margin: 0; padding: 0;">
+			<div>
+				<table border="0" class="cabecario">
+				  <tr>
+				    <td rowspan="3" width="6%" ><img src="${urlServidor}/treino-consciente/images/logo.png" class="logo"/> </td>
+				    <td width="3%" style="text-align :left">Nome:</td>
+				    <td colspan="3">$treinoDto.treino.aluno.nome</td>
+				  </tr>
+				  <tr>
+				    <td width="3%" style="text-align :left">Data Início:</td>
+				    <td>$treinoDto.dataIni</td>
+				   <td width="3%" style="text-align :left">Data Troca:</td>
+				    <td>$treinoDto.dataTroca</td>
+				  </tr>
+				    <tr>
+				    <td width="3%" style="text-align :left">Email:</td>
+				    <td colspan="3">$treinoDto.treino.aluno.email</td>
+				  </tr>
+				</table>
+			
+			</div>
+		
+		
+			<div class="msgInicial">
+			<span>Para lhe ajudar com seus treinos, adicionamos links com videos explicativos de tudo que foi prescrito no seu treino. Para acessá-
+los clique no link (texto em azul sublinhado) do exercício. Isso não elimina a necessidade de uma supervisão profissional
+para garantir a perfeita execução do planejado.</span>
+			</div>
+			
+			
+			#if($exerciciosA && $exerciciosA.size() > 0)
+				<div class="pad-top-exer">		
+					<div style="text-align: center;"><strong>Treino A</strong></div>
+					<div style="padding-top: 5px;">
+						<table class="treinos">
+				            <thead>
+				                <tr>
+									<th>Exercício</th>
+									<th>Método</th>
+									<th>Observação</th>
+									<th>Séries</th>
+									<th>Reps</th>
+									<th>Intervalo</th>
+									<th>Cadência</th>
+				                </tr>
+				            </thead>
+				            <tbody>
+				                #foreach( $exer in $exerciciosA )
+								   <tr>
+								     <td style="background-color: #e0e0e0"> <a href="$exer.linkExercicio"> $exer.nomeExercicio </a> </td>
+								     <td> <a href="$exer.linkMetodo">$exer.metodo </a> </td>
+								     <td>$exer.observacao</td>
+								     <td>$exer.series</td>
+								     <td>$exer.reps</td>
+								     <td>$exer.intervalo</td>
+								     <td>$exer.cadencia</td>
+								   </tr>	
+								 #end	
+				            </tbody>
+				        </table>
+				     </div>
+			      </div>
+			 #end
+			 
+			 #if($exerciciosB && $exerciciosB.size() > 0)
+				<div class="pad-top-exer">
+					<div style="text-align: center;"><strong>Treino B</strong></div>
+					<div style=" padding-top: 5px;">
+						<table class="treinos">
+				            <thead>
+				                <tr>
+									<th>Exercício</th>
+									<th>Método</th>
+									<th>Observação</th>
+									<th>Séries</th>
+									<th>Reps</th>
+									<th>Intervalo</th>
+									<th>Cadência</th>
+				                </tr>
+				            </thead>
+				            <tbody>
+				                #foreach( $exer in $exerciciosB )
+								   <tr>
+								     <td style="background-color: #e0e0e0"> <a href="$exer.linkExercicio"> $exer.nomeExercicio </a> </td>
+								     <td> <a href="$exer.linkMetodo">$exer.metodo </a> </td>
+								     <td>$exer.observacao</td>
+								     <td>$exer.series</td>
+								     <td>$exer.reps</td>
+								     <td>$exer.intervalo</td>
+								     <td>$exer.cadencia</td>
+								   </tr>	
+								 #end	
+				            </tbody>
+				        </table>
+				     </div>
+			      </div>
+			 #end
+			 
+			 #if($exerciciosC && $exerciciosC.size() > 0)
+				<div class="pad-top-exer">
+					<div style="text-align: center;"><strong>Treino C</strong></div>
+					<div style=" padding-top: 5px;">
+						<table class="treinos">
+				            <thead>
+				                <tr>
+									<th>Exercício</th>
+									<th>Método</th>
+									<th>Observação</th>
+									<th>Séries</th>
+									<th>Reps</th>
+									<th>Intervalo</th>
+									<th>Cadência</th>
+				                </tr>
+				            </thead>
+				            <tbody>
+				                #foreach( $exer in $exerciciosC )
+								   <tr>
+								     <td style="background-color: #e0e0e0"> <a href="$exer.linkExercicio"> $exer.nomeExercicio </a> </td>
+								     <td> <a href="$exer.linkMetodo">$exer.metodo </a> </td>
+								     <td>$exer.observacao</td>
+								     <td>$exer.series</td>
+								     <td>$exer.reps</td>
+								     <td>$exer.intervalo</td>
+								     <td>$exer.cadencia</td>
+								   </tr>	
+								 #end	
+				            </tbody>
+				        </table>
+				     </div>
+			      </div>
+			 #end
+			 
+			  #if($exerciciosHiit1 && $exerciciosHiit1.size() > 0)
+				<div class="pad-top-exer">
+					<div style="text-align: center;"><strong>HIIT</strong></div>
+					<div style=" padding-top: 5px;">
+						<table class="treinos">
+				            <thead>
+				                <tr>
+									<th>Exercício</th>
+									<th>Método</th>
+									<th>Observação</th>
+									<th>Séries</th>
+									<th>Reps</th>
+									<th>Intervalo</th>
+									<th>Cadência</th>
+				                </tr>
+				            </thead>
+				            <tbody>
+				                #foreach( $exer in $exerciciosHiit1 )
+								   <tr>
+								     <td style="background-color: #e0e0e0"> <a href="$exer.linkExercicio"> $exer.nomeExercicio </a> </td>
+								     <td> <a href="$exer.linkMetodo">$exer.metodo </a> </td>
+								     <td>$exer.observacao</td>
+								     <td>$exer.series</td>
+								     <td>$exer.reps</td>
+								     <td>$exer.intervalo</td>
+								     <td>$exer.cadencia</td>
+								   </tr>	
+								 #end	
+				            </tbody>
+				        </table>
+				     </div>
+			      </div>
+			 #end
+			 #if($exerciciosHiit2 && $exerciciosHiit2.size() > 0)
+				<div class="pad-top-exer">
+					<div style="text-align: center;"><strong>Aeróbio Continuo</strong></div>
+					<div style=" padding-top: 5px;">
+						<table class="treinos">
+				            <thead>
+				                <tr>
+									<th>Exercício</th>
+									<th>Método</th>
+									<th>Observação</th>
+									<th>Séries</th>
+									<th>Reps</th>
+									<th>Intervalo</th>
+									<th>Cadência</th>
+				                </tr>
+				            </thead>
+				            <tbody>
+				                #foreach( $exer in $exerciciosHiit2 )
+								   <tr>
+								     <td style="background-color: #e0e0e0"> <a href="$exer.linkExercicio"> $exer.nomeExercicio </a> </td>
+								     <td> <a href="$exer.linkMetodo">$exer.metodo </a> </td>
+								     <td>$exer.observacao</td>
+								     <td>$exer.series</td>
+								     <td>$exer.reps</td>
+								     <td>$exer.intervalo</td>
+								     <td>$exer.cadencia</td>
+								   </tr>	
+								 #end	
+				            </tbody>
+				        </table>
+				     </div>
+			      </div>
+			 #end
+			 
+		</body>
+</html>

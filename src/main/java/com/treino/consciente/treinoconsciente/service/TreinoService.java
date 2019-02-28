@@ -61,6 +61,10 @@ public class TreinoService {
 		return treinoRepository.findById(id);
 	}
 	
+	public void deletePlanilhasTreino(Long idTreino) {
+		treinoRepository.deletePlanilhaTreino(idTreino);
+	}
+	
 	public Treino save(Treino treino) {
 		treino.setProfessor(profRepository.findById(treino.getProfessor().getIdProfessor()).get());
 		treino.setAluno(alunoRepository.findById(treino.getAluno().getIdAluno()).get());
@@ -80,6 +84,12 @@ public class TreinoService {
 				treino.setDataReentrada(Date.from(dataPlus30.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 			}
 		}
+		return treinoRepository.save(treino);
+	}
+	
+	public Treino saveSemAlterarStatusAndDatas(Treino treino) {
+		treino.setProfessor(profRepository.findById(treino.getProfessor().getIdProfessor()).get());
+		treino.setAluno(alunoRepository.findById(treino.getAluno().getIdAluno()).get());
 		return treinoRepository.save(treino);
 	}
 	

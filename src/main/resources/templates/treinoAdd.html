@@ -20,7 +20,7 @@
 		      <span class="icon-bar"></span>
 		    </button>
 		    <a class="navbar-brand" th:href="@{/}" style="padding: 1px 1px;">
-		    	<img alt="Treino Consciente" style="width: 117px; height: 53px" src="http://treinoconsciente.pagezz.net/files/sites/10344/2017/11/logo_treino_consciente_black.png">
+		    	<img alt="Treino Consciente" style="width: 117px; height: 45px" src="https://static.wixstatic.com/media/29e864_040ca5f10d0e4224bf3eaf75c8241249~mv2.png/v1/fill/w_145,h_46,al_c,usm_0.66_1.00_0.01/Logo%20-%20Finalizado.png">
 	    	</a>
 		  </div>
 		  <div id="navbar" class="navbar-collapse collapse">
@@ -111,12 +111,6 @@
 						</div>												
 						<div class="form-group row">
 							<div class="col-md-4" th:classappend="${#fields.hasErrors('observacao')}? 'has-error'">
-								<label>Obs</label>
-								<textarea class="form-control input-sm" th:field="*{observacao}" id="observacao" cols="5" rows="5" placeholder="Informe a obs"></textarea>
-							</div>
-						</div>		
-						<div class="form-group row">
-							<div class="col-md-4" th:classappend="${#fields.hasErrors('observacao')}? 'has-error'">
 								<label>Sequência</label>
 								<input type="text" class="form-control input-sm" th:field="*{sequenciaTreino}" id="sequenciaTreino"/>
 							</div>
@@ -128,6 +122,7 @@
 				<div class="form-group row">
 					<button type="submit" class="btn btn-sm btn-primary">Salvar</button>
 					<a th:href="@{/}" class="btn btn-sm btn-default">Cancelar</a>
+					<a class="btn btn-sm btn-success" th:href="@{/addPlanilha/{id}(id=${treino.idTreino})}" >Add Planilha</a> 
 					<a th:href="@{/delete/id(id=*{idTreino})}" class="btn btn-sm btn-danger">Excluir</a>
 				</div>
 			</form>

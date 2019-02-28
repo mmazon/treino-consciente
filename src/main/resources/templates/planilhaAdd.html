@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width" />
+	<meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+	<title>Adicionar Planilha</title>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"></link>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link  th:href="@{/css/styles.css}" rel="stylesheet"></link>
+	<script th:src="@{/js/SimpleTableCellEditor.js}"></script>
+	<script th:src="@{/js/treino-plan-js.js}"></script>
+	
+</head>
+
+<script>
+$(function () {
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
+});
+</script>
+<body>
+	<div class="panel panel-default">
+		 <nav class="navbar navbar-inverse navbar-static-top">
+		  <div class="navbar-header">
+		    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+		      <span class="sr-only">Toggle navigation</span>
+		      <span class="icon-bar"></span>
+		      <span class="icon-bar"></span>
+		      <span class="icon-bar"></span>
+		    </button>
+		    <a class="navbar-brand" th:href="@{/}" style="padding: 1px 1px;">
+		    	<img alt="Treino Consciente" style="width: 117px; height: 45px" src="https://static.wixstatic.com/media/29e864_040ca5f10d0e4224bf3eaf75c8241249~mv2.png/v1/fill/w_145,h_46,al_c,usm_0.66_1.00_0.01/Logo%20-%20Finalizado.png">
+	    	</a>
+		  </div>
+		  <div id="navbar" class="navbar-collapse collapse">
+		    <ul class="nav navbar-nav">
+		      <li><a th:href="@{/}">Home</a></li>
+		      <li class="active"><a th:href="@{/add/}" >Novo treino</a></li>
+		      <li><a th:href="@{/logout}" title="Logout"><span class="glyphicon glyphicon-log-out"></span></a></li>
+		    </ul>
+		  </div>
+		</nav>
+		<div class="panel-heading">
+			<strong>Cadastrar Planilha Treino</strong>
+		</div>
+		<div class="panel-body">
+			<form class="form-horizontal" th:object="${treino}" th:action="@{/savePlanilha}" method="POST" style="margin: 10px;">
+			 <input type="hidden" class="form-control input-sm" id="idTreino" th:field="*{idTreino}" readOnly="readonly"/>
+				
+				<div class="form-group">
+ 					<fieldset>
+						<div class="form-group row">
+							<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+								<div th:each="detailedError : ${#fields.detailedErrors()}">
+									<span th:text="${detailedError.message}"></span>
+								</div>
+							</div>
+						</div> 					
+						<div class="form-group row">                                                          
+							<div class="col-md-3" th:classappend="${#fields.hasErrors('professor.nome')}? 'has-error'">
+							    <label>Professor: <span th:text="*{professor.nome}" th:id="professor"> </span></label> 
+							    <input type="hidden" th:field="*{professor.idProfessor}" th:id="idProfessor"/>
+							</div>
+							<div class="col-md-3" th:classappend="${#fields.hasErrors('aluno.nome')}? 'has-error'">
+								<label>Aluno: <span th:text="*{aluno.nome}" th:id="aluno"> </span></label>
+								<input type="hidden" th:field="*{aluno.idAluno}" th:id="idAluno"/>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-3" th:classappend="${#fields.hasErrors('tipoTreino')}? 'has-error'">
+								<label>Vezes na semana</label>
+							    <div class="weekDays-selector">
+								    
+								     <th:block th:each="dia, stat : *{diasSemana}">
+								        <input type="checkbox" th:id="${dia.codigo}" th:field="*{listaDeDiasSelecionadosExer[__${stat.index}__]}" 
+								        		th:value="${dia.codigo}" th:checked="${dia.selecionado}" />
+								        <label th:for="${dia.codigo}" th:text="${dia.nome}" />
+								    </th:block>
+								    
+								  
+								</div>
+						    </div>								
+						</div>	
+						 <div class="form-group row">
+						 	<div class="col-md-2">
+							 	<a class="btn btn-sm btn-success" onclick="loadComboModelos()">Load Modelos</a>
+							 </div>
+						 </div>
+						 
+					   	<div class="form-group row">                                                          
+							<div class="col-md-4">
+							    <label>Modelos</label> 
+								<select class="form-control" th:field="*{modeloSelecionado.idModelo}"  id="selectModelos" name="selectModelos">
+									<option value="0"> Selecione </option>
+									<option th:each="modelo : ${comboModelos}" th:value="${modelo.idModelo}" th:text="${modelo.nome}"></option>
+							    </select>
+							</div>
+						</div>
+						
+					   	<div class="form-group row" id="divExer" th:style="${planilhasExercicios!=null and !planilhasExercicios.empty ? '' : 'display:none;'}">                                                          
+							<div class="col-md-8">
+							    <label>Exercícios</label> 
+						        <table class="table table-sm table-striped table-hover table-bordered"  id="tableExerResults" name="tableExerResults">
+						            <thead>
+						                <tr>
+											<th>Treino</th>
+											<th>Exercício</th>
+											<th>Método</th>
+											<th>Observação</th>
+											<th>Séries</th>
+											<th>Reps</th>
+											<th>Intervalo</th>
+											<th>Cadência</th>
+						                </tr>
+						            </thead>
+						            <tbody>
+						                <tr th:each="exercicio, stat : ${planilhasExercicios}" th:id="${stat.index}">
+						                	
+						                	<td text="idPlanTreino" style="display:none;"> 
+						                	</td>
+						                	
+						                	<td th:text="${exercicio.nomePlanilhaExer}"> 
+						                	</td>
+						                	
+						                	<td class="editMe" th:text="${exercicio.nomeExercicio}" th:id="${stat.index} + '-nomeExercicio'" >
+						                	</td>
+						                	<td th:text="${exercicio.linkExercicio}" style="display:none;"> 
+						                	</td>
+						                    
+						                    <td class="editMe" th:text="${exercicio.metodo}" th:id="${stat.index} + 'metodo'">
+						                    </td>
+						                    <td th:text="${exercicio.linkMetodo}" style="display:none;"> 
+						                	</td>
+						                    
+						                    <td class="editMe" th:text="${exercicio.observacao}" th:id="${stat.index} + 'observacao'">
+						                    </td>
+						                    
+						                    <td class="editMe" th:text="${exercicio.series}" th:id="${stat.index} + 'series'">
+						                    </td>
+						                    
+						                    <td class="editMe" th:text="${exercicio.reps}" th:id="${stat.index} + 'reps'">
+						                    </td>
+						                    <td class="editMe" th:text="${exercicio.intervalo}" th:id="${stat.index} + '-intervalo'">
+						                    </td>
+						                    <td class="editMe" th:text="${exercicio.cadencia}" th:id="${stat.index} + 'cadencia'">
+						                    </td>
+						                    <td th:text="${exercicio.modeloTreino.idModelo}" style="display:none;"/>
+						                    <td th:text="${exercicio.modeloTreino.qtDias}" style="display:none;"/>  
+						                    <td th:text="${exercicio.modeloTreino.nome}" style="display:none;"/> 
+						                	</td>
+						                </tr>
+						            </tbody>
+						        </table>
+							</div>
+						</div>
+						
+						<div class="form-group row">
+						 	<div class="col-md-2">
+							 	<a class="btn btn-sm btn-success" onclick="addHiit()" id="idBtnHiit" th:style="${planilhasExercicios!=null and !planilhasExercicios.empty ? '' : 'display:none;'}"> Add HIIT</a>
+							 </div>
+						 </div>
+						 
+						<div id="camposHiit1" th:style="${planilhasExerciciosHiit!=null and !planilhasExerciciosHiit.empty ? '' : 'display:none;'}">
+							
+							<div class="form-group row">
+								<div class="col-md-3">
+									<label>Vezes na semana HIIT</label>
+								    <div class="weekDays-selector">
+									    
+									     <th:block th:each="dia, stat : *{diasSemana}">
+									        <input type="checkbox" th:id="'h-' + ${dia.codigo}" th:field="*{listaDeDiasSelecionadosHiit[__${stat.index}__]}" th:value="${dia.codigo}" th:checked="${dia.selecionado}" />
+									        <label th:for="'h-' + ${dia.codigo}" th:text="${dia.nome}" />
+									    </th:block>
+									    
+									  
+									</div>
+							    </div>								
+							</div>
+						   	<div class="form-group row">                                                          
+								<div class="col-md-4">
+								    <label>Modelos HIIT</label> 
+									<select class="form-control" th:field="*{modeloHiitSelecionado.idModelo}"  id="selectModelosHiit" name="selectModelosHiit">
+										<option value="0"> Selecione </option>
+										<option th:each="modelo : ${comboModelosHiit}" th:value="${modelo.idModelo}" th:text="${modelo.nome}"></option>
+								    </select>
+								</div>
+							</div>
+							
+							<div class="form-group row">                                                          
+							<div class="col-md-8">
+							    <label>HIIT 1</label> 
+						        <table class="table table-sm table-striped table-hover table-bordered"  id="tableExerHiitResults" name="tableExerHiitResults">
+						            <thead>
+						                <tr>
+											<th>Treino</th>
+											<th>Exercício</th>
+											<th>Método</th>
+											<th>Observação</th>
+											<th>Séries</th>
+											<th>Reps</th>
+											<th>Intervalo</th>
+											<th>Cadência</th>
+						                </tr>
+						            </thead>
+						            <tbody>
+						                <tr th:each="exercicioHiit, stat : ${planilhasExerciciosHiit}" th:id="${stat.index}">
+						                	
+						                	<td text="idPlanTreino" style="display:none;"> 
+						                	</td>
+						                	
+						                	<td th:text="${exercicioHiit.nomePlanilhaExer}"> 
+						                	</td>
+						                	
+						                	<td class="editMe" th:text="${exercicioHiit.nomeExercicio}" th:id="${stat.index} + '-nomeExercicio'" >
+						                	</td>
+						                	<td th:text="${exercicioHiit.linkExercicio}" style="display:none;"> 
+						                	</td>
+						                    
+						                    <td class="editMe" th:text="${exercicioHiit.metodo}" th:id="${stat.index} + 'metodo'">
+						                    </td>
+						                    <td th:text="${exercicioHiit.linkMetodo}" style="display:none;"> 
+						                	</td>
+						                    
+						                    <td class="editMe" th:text="${exercicioHiit.observacao}" th:id="${stat.index} + 'observacao'">
+						                    </td>
+						                    
+						                    <td class="editMe" th:text="${exercicioHiit.series}" th:id="${stat.index} + 'series'">
+						                    </td>
+						                    
+						                    <td class="editMe" th:text="${exercicioHiit.reps}" th:id="${stat.index} + 'reps'">
+						                    </td>
+						                    <td class="editMe" th:text="${exercicioHiit.intervalo}" th:id="${stat.index} + '-intervalo'">
+						                    </td>
+						                    <td class="editMe" th:text="${exercicioHiit.cadencia}" th:id="${stat.index} + 'cadencia'">
+						                    </td>
+						                   <td th:text="${exercicioHiit.modeloTreino.idModelo}" style="display:none;"/>
+						                    <td th:text="${exercicioHiit.modeloTreino.qtDias}" style="display:none;"/>  
+						                    <td th:text="${exercicioHiit.modeloTreino.nome}" style="display:none;"/> 
+						                </tr>
+						            </tbody>
+						        </table>
+							</div>
+						</div>
+								
+						</div>
+						
+						<div class="form-group row">
+						 	<div class="col-md-2">
+							 	<a class="btn btn-sm btn-success" onclick="addOtherHiit()"
+								 	 id="idBtnOtherHiit" th:style="${planilhasExerciciosHiit!=null and !planilhasExerciciosHiit.empty ? '' : 'display:none;'}">Add AC</a>
+							 </div>
+						 </div>
+						 
+						 <div id="camposHiit2" th:style="${planilhasExerciciosHiit2!=null and !planilhasExerciciosHiit2.empty ? '' : 'display:none;'}">
+							
+							<div class="form-group row">
+								<div class="col-md-3">
+									<label>Vezes na semana AC</label>
+								    <div class="weekDays-selector">
+									    
+									     <th:block th:each="dia, stat : *{diasSemana}">
+									        <input type="checkbox" th:id="'h2-' + ${dia.codigo}" th:field="*{listaDeDiasSelecionadosOtherHiit[__${stat.index}__]}" th:value="${dia.codigo}" th:checked="${dia.selecionado}" />
+									        <label th:for="'h2-' + ${dia.codigo}" th:text="${dia.nome}" />
+									    </th:block>
+									    
+									  
+									</div>
+							    </div>								
+							</div>
+						   	<div class="form-group row">                                                          
+								<div class="col-md-4">
+								    <label>Modelos AC</label> 
+									<select class="form-control" th:field="*{modeloOtherHiitSelecionado.idModelo}"  id="selectModelosHiit2" name="selectModelosHiit2">
+										<option value="0"> Selecione </option>
+										<option th:each="modelo : ${comboModelosHiit2}" th:value="${modelo.idModelo}" th:text="${modelo.nome}"></option>
+								    </select>
+								</div>
+							</div>
+							
+							<div class="form-group row">                                                          
+							<div class="col-md-8">
+							    <label>Aeróbio Continuo</label> 
+						        <table class="table table-sm table-striped table-hover table-bordered"  id="tableExerHiitResults2" name="tableExerHiitResults2">
+						            <thead>
+						                <tr>
+											<th>Treino</th>
+											<th>Exercício</th>
+											<th>Método</th>
+											<th>Observação</th>
+											<th>Séries</th>
+											<th>Reps</th>
+											<th>Intervalo</th>
+											<th>Cadência</th>
+						                </tr>
+						            </thead>
+						            <tbody>
+						                <tr th:each="exercicioHiit2, stat : ${planilhasExerciciosHiit2}" th:id="${stat.index}">
+						                	
+						                	<td text="idPlanTreino" style="display:none;"> 
+						                	</td>
+						                	
+						                	<td th:text="${exercicioHiit2.nomePlanilhaExer}"> 
+						                	</td>
+						                	
+						                	<td class="editMe" th:text="${exercicioHiit2.nomeExercicio}" th:id="${stat.index} + '-nomeExercicio'" >
+						                	</td>
+						                	<td th:text="${exercicioHiit2.linkExercicio}" style="display:none;"> 
+						                	</td>
+						                    
+						                    <td class="editMe" th:text="${exercicioHiit2.metodo}" th:id="${stat.index} + 'metodo'">
+						                    </td>
+						                    <td th:text="${exercicioHiit2.linkMetodo}" style="display:none;"> 
+						                	</td>
+						                    
+						                    <td class="editMe" th:text="${exercicioHiit2.observacao}" th:id="${stat.index} + 'observacao'">
+						                    </td>
+						                    
+						                    <td class="editMe" th:text="${exercicioHiit2.series}" th:id="${stat.index} + 'series'">
+						                    </td>
+						                    
+						                    <td class="editMe" th:text="${exercicioHiit2.reps}" th:id="${stat.index} + 'reps'">
+						                    </td>
+						                    <td class="editMe" th:text="${exercicioHiit2.intervalo}" th:id="${stat.index} + '-intervalo'">
+						                    </td>
+						                    <td class="editMe" th:text="${exercicioHiit2.cadencia}" th:id="${stat.index} + 'cadencia'">
+						                    </td>
+						                    
+						                    <td th:text="${exercicioHiit2.modeloTreino.idModelo}" style="display:none;"/>
+						                    <td th:text="${exercicioHiit2.modeloTreino.qtDias}" style="display:none;"/>  
+						                    <td th:text="${exercicioHiit2.modeloTreino.nome}" style="display:none;"/> 
+						                    
+						                </tr>
+						            </tbody>
+						        </table>
+							</div>
+						</div>
+								
+						</div>
+						<div class="form-group row">
+							<div class="col-md-4" th:classappend="${#fields.hasErrors('observacao')}? 'has-error'">
+								<label>Obs</label>
+								<textarea class="form-control input-sm" th:field="*{observacao}" id="observacao" cols="5" rows="5" placeholder="Informe a obs"></textarea>
+							</div>
+						</div>	
+						
+					</fieldset>
+				</div>
+				<div class="form-group row">
+					<a class="btn btn-sm btn-primary" onclick="sendDataTreino('savePlanilha')">Salvar planilha</a>
+<!-- 					<a class="btn btn-sm btn-success" onclick="sendDataTreino('geraPlanilha')">Download treino</a> -->
+				    <a id="downFile" th:style="${planilhasExercicios!=null and !planilhasExercicios.empty ? '' : 'display:none;'}"
+				    	 class="btn btn-sm btn-success" th:href="@{/files/{id}(id=${treino.idTreino})}" >Download treino</a> 
+					
+					<a th:href="@{/}" class="btn btn-sm btn-default">Cancelar</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

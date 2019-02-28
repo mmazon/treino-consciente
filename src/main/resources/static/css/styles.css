@@ -11,3 +11,26 @@
   75%{background-color:#a84039;}
   100% {background-color: #623633;}
 }
+
+.weekDays-selector input[type=checkbox] {
+  display: none!important;
+}
+
+.weekDays-selector input[type=checkbox] + input[type=hidden] + label  {
+  display: inline-block;
+  border-radius: 6px;
+  background: #dddddd;
+  height: 40px;
+  width: 30px;
+  margin-right: 3px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.weekDays-selector input[type=checkbox]:checked + input[type=hidden] + label {
+  background: #057ED7;
+  color: #ffffff;
+}
+
+

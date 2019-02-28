@@ -3,7 +3,10 @@ package com.treino.consciente.treinoconsciente.repository;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -37,5 +40,10 @@ public interface TreinoRepository extends JpaRepository<Treino, Long> {
 	
 	@Query("SELECT t FROM treino t WHERE t.aluno.email = ?1 ORDER BY idTreino DESC")
 	List<Treino> findLastTreinoByEmail(String email);
+	
+	@Transactional
+	@Modifying
+	@Query("DELETE FROM planilha_treino t WHERE t.treino.idTreino = ?1")
+	void deletePlanilhaTreino(Long idTreino);
 
 }

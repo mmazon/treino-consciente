@@ -4,17 +4,22 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
@@ -84,6 +89,14 @@ public class Treino implements Serializable {
 		return renovou;
 	}
 
+	public List<PlanilhaExercicio> getPlanilhasExercicios() {
+		return planilhasExercicios;
+	}
+
+	public void setPlanilhasExercicios(List<PlanilhaExercicio> planilhasExercicios) {
+		this.planilhasExercicios = planilhasExercicios;
+	}
+
 	public void setRenovou(Integer renovou) {
 		this.renovou = renovou;
 	}
@@ -96,9 +109,139 @@ public class Treino implements Serializable {
 	@JoinColumn(name = "id_professor")
     private Professor professor;
 	
-	@Transient
-	private Boolean piscaFundo = false; //tcheee
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "treino")
+	@OrderBy("idPlanilhaTreino")
+    private List<PlanilhaTreino> planilhas = new ArrayList<>();
 	
+	@Column(name = "dias_da_semana")
+	private String diasDaSemanaStr;
+	
+	@Column(name = "dias_da_semana_hiit")
+	private String diasDaSemanaHiitStr;
+	
+	@Column(name = "dias_da_semana_hiit2")
+	private String diasDaSemanaHiit2Str;
+	
+	//atributos da tela
+	
+	@Transient
+	private List<PlanilhaExercicio> planilhasExercicios = new ArrayList<>();
+
+	@Transient
+	private Boolean piscaFundo = false;
+	
+	@Transient
+	private List<String> listaDeDiasSelecionadosExer = new ArrayList<>();
+	
+	@Transient
+	private List<String> listaDeDiasSelecionadosHiit = new ArrayList<>();
+	
+	@Transient
+	private List<String> listaDeDiasSelecionadosOtherHiit = new ArrayList<>();
+	
+	@Transient
+	List<DiasSemanaTreino> diasSemana = new ArrayList<DiasSemanaTreino>();
+	
+	@Transient
+	List<ModeloExercicio> modelos = new ArrayList<ModeloExercicio>();
+	
+	@Transient
+	private ModeloExercicio modeloSelecionado;
+	
+	@Transient
+	private ModeloExercicio modeloHiitSelecionado;
+	
+	@Transient
+	private ModeloExercicio modeloOtherHiitSelecionado;
+	
+	public List<PlanilhaTreino> getPlanilhas() {
+		return planilhas;
+	}
+
+	public void setPlanilhas(List<PlanilhaTreino> planilhas) {
+		this.planilhas = planilhas;
+	}
+
+	public String getDiasDaSemanaHiitStr() {
+		return diasDaSemanaHiitStr;
+	}
+
+	public void setDiasDaSemanaHiitStr(String diasDaSemanaHiitStr) {
+		this.diasDaSemanaHiitStr = diasDaSemanaHiitStr;
+	}
+
+	public String getDiasDaSemanaHiit2Str() {
+		return diasDaSemanaHiit2Str;
+	}
+
+	public void setDiasDaSemanaHiit2Str(String diasDaSemanaHiit2Str) {
+		this.diasDaSemanaHiit2Str = diasDaSemanaHiit2Str;
+	}
+
+	public List<String> getListaDeDiasSelecionadosOtherHiit() {
+		return listaDeDiasSelecionadosOtherHiit;
+	}
+
+	public void setListaDeDiasSelecionadosOtherHiit(List<String> listaDeDiasSelecionadosOtherHiit) {
+		this.listaDeDiasSelecionadosOtherHiit = listaDeDiasSelecionadosOtherHiit;
+	}
+
+	public ModeloExercicio getModeloHiitSelecionado() {
+		return modeloHiitSelecionado;
+	}
+
+	public ModeloExercicio getModeloOtherHiitSelecionado() {
+		return modeloOtherHiitSelecionado;
+	}
+
+	public void setModeloOtherHiitSelecionado(ModeloExercicio modeloOtherHiitSelecionado) {
+		this.modeloOtherHiitSelecionado = modeloOtherHiitSelecionado;
+	}
+
+	public void setModeloHiitSelecionado(ModeloExercicio modeloHiitSelecionado) {
+		this.modeloHiitSelecionado = modeloHiitSelecionado;
+	}
+
+	public List<String> getListaDeDiasSelecionadosHiit() {
+		return listaDeDiasSelecionadosHiit;
+	}
+
+	public void setListaDeDiasSelecionadosHiit(List<String> listaDeDiasSelecionadosHiit) {
+		this.listaDeDiasSelecionadosHiit = listaDeDiasSelecionadosHiit;
+	}
+
+	public List<DiasSemanaTreino> getDiasSemana() {
+		return diasSemana;
+	}
+
+	public List<ModeloExercicio> getModelos() {
+		return modelos;
+	}
+
+	public void setModelos(List<ModeloExercicio> modelos) {
+		this.modelos = modelos;
+	}
+
+	public ModeloExercicio getModeloSelecionado() {
+		return modeloSelecionado;
+	}
+
+	public void setModeloSelecionado(ModeloExercicio modeloSelecionado) {
+		this.modeloSelecionado = modeloSelecionado;
+	}
+
+	public String getDiasDaSemanaStr() {
+		return diasDaSemanaStr;
+	}
+
+	public void setDiasDaSemanaStr(String diasDaSemanaStr) {
+		this.diasDaSemanaStr = diasDaSemanaStr;
+	}
+
+	public void setDiasSemana(List<DiasSemanaTreino> diasSemana) {
+		this.diasSemana = diasSemana;
+	}
+
 	public String getLinkForm() {
 		return linkForm;
 	}
@@ -474,6 +617,14 @@ public class Treino implements Serializable {
 
 	public void setEnviouMailAindaTempo(Integer enviouMailAindaTempo) {
 		this.enviouMailAindaTempo = enviouMailAindaTempo;
+	}
+
+	public List<String> getListaDeDiasSelecionadosExer() {
+		return listaDeDiasSelecionadosExer;
+	}
+
+	public void setListaDeDiasSelecionadosExer(List<String> listaDeDiasSelecionadosExer) {
+		this.listaDeDiasSelecionadosExer = listaDeDiasSelecionadosExer;
 	}
 	
 }
