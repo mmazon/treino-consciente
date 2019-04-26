@@ -1,5 +1,6 @@
 package com.treino.consciente.treinoconsciente.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import com.treino.consciente.treinoconsciente.model.PlanilhaExercicio;
 import com.treino.consciente.treinoconsciente.model.PlanilhaTreino;
 import com.treino.consciente.treinoconsciente.model.Treino;
 import com.treino.consciente.treinoconsciente.service.ConverterHtmlToPdf;
+import com.treino.consciente.treinoconsciente.service.MailService;
 import com.treino.consciente.treinoconsciente.service.ModeloExercicioService;
 import com.treino.consciente.treinoconsciente.service.PlanilhaExercicioService;
 import com.treino.consciente.treinoconsciente.service.ProfessorService;
@@ -52,6 +54,9 @@ public class TreinoController {
 	private PlanilhaExercicioService planilhaService;
 	@Autowired
 	ConverterHtmlToPdf pdfConv;
+	
+	@Autowired
+	private MailService mailService;
 	
 	Logger logger = LoggerFactory.getLogger(TreinoController.class);
 	
@@ -152,12 +157,12 @@ public class TreinoController {
 			List<ModeloExercicio> modelosHiit = modeloService.findAllByQtDias(7);
 			model.addAttribute("comboModelosHiit", modelosHiit);
 			model.addAttribute("comboModelosHiit2", modelosHiit);
-			
+			model.addAttribute("exers", planilhaService.findTodosGroupNameLink());
+			 
 			return "planilhaAdd";
 		}
-			
 		return add(new Treino(), model);
-	}
+	} 
 	
 	private List<PlanilhaTreino> setaPlanilhaAbc(List<PlanilhaTreino> planilhas) {
 		List<PlanilhaTreino> listAbc = new ArrayList<>();
@@ -194,7 +199,7 @@ public class TreinoController {
 		model.addAttribute("planilhasExerciciosHiit", listHiit);
 		return new ModeloExercicio();
 	}
-
+ 
 	@PostMapping("/savePlanilha")
 	public String savePlanilha(@RequestBody Treino treino, Model model) {
 		Optional<Treino> treinoBuscaOpt = treinoService.findOne(treino.getIdTreino());
@@ -202,7 +207,7 @@ public class TreinoController {
 			Treino treinoBusca = treinoBuscaOpt.get();
 			if(treinoBusca.getPlanilhas() != null){
 				treinoService.deletePlanilhasTreino(treinoBusca.getIdTreino());
-			}
+			} 
 			trataCamposTela(treino, treinoBusca);
 			trataDiasSemana(treino, treinoBusca);
 			treinoService.saveSemAlterarStatusAndDatas(treinoBusca);
@@ -237,29 +242,7 @@ public class TreinoController {
 		List<PlanilhaExercicio> listExerc = planilhaService.findAllPorIdModelo(idModelo);
 		model.addAttribute("planilhasExerciciosHiit2", listExerc);
 	    return "planilhaAdd :: #tableExerHiitResults2";
-	}
-	
-//	@PostMapping(value= "/geraPlanilha")
-//	public ResponseEntity<ByteArrayResource> geraPlanilha(@RequestBody Treino treino, Model model) {
-//		Optional<Treino> treinoBuscaOpt = treinoService.findOne(treino.getIdTreino());
-//		if(treinoBuscaOpt.isPresent()){
-//			Treino treinoBusca = treinoBuscaOpt.get();
-//			trataCamposTela(treino, treinoBusca);
-//			trataDiasSemana(treino, treinoBusca);
-//			
-//			ByteArrayResource resource = new ByteArrayResource(pdfConv.convertHtmlToPdf(treinoBusca));
-//			
-//			return ResponseEntity.ok()
-//	                // Content-Disposition
-//	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + "treino_" + treinoBusca.getIdTreino() +".pdf")
-//	                // Content-Type
-//	                .contentType(MediaType.APPLICATION_PDF)
-//	                // Contet-Length
-//	                .body(resource);	
-//		}
-//		 
-//		return null;
-//	}
+	} 
 	
 	@GetMapping(value = "/files/{id}")
 	public ResponseEntity<ByteArrayResource> downloadPlanilha(@PathVariable("id") Long idTreino) {
@@ -270,11 +253,19 @@ public class TreinoController {
 		
 		return ResponseEntity.ok()
                 // Content-Disposition
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + "treino_" + treinoBusca.getAluno().getNome().replaceAll("\\s+","_")  +".pdf")
-                // Content-Type
-                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + "Treino_" + treinoBusca.getAluno().getNome().replaceAll("\\s+","_")  +".pdf")
+                .contentType(MediaType.valueOf("application/pdf;charset=UTF-8"))
                 // Contet-Length
                 .body(resource);	
+	}
+	
+	@PostMapping(value = "/enviaMailPlanilha")
+	public String enviaEmailPlanilha(@RequestBody Treino treino, Model model) {
+		Optional<Treino> treinoBuscaOpt = treinoService.findOne(treino.getIdTreino());
+		Treino treinoBusca = treinoBuscaOpt.get();
+		File file = pdfConv.convertHtmlToPdfFile(treinoBusca);
+		mailService.sendMailPlanilhaTreino(treinoBusca, "Treino " + treinoBusca.getAluno().getNome()  +".pdf", file);
+		return addPlanilha(treinoBusca.getIdTreino(), model);
 	}
 
 	private void trataCamposTela(Treino treino, Treino treinoBusca) {
@@ -325,8 +316,6 @@ public class TreinoController {
 			}
 			treinoBusca.setDiasDaSemanaStr(diaSemana.toString());
 			
-			
-			
 			diaSemana = new StringBuilder();
 			sep = ",";
 			first = true;
@@ -352,7 +341,6 @@ public class TreinoController {
 				}
 			}
 			treinoBusca.setDiasDaSemanaHiitStr(diaSemana.toString());
-			
 			
 			
 			diaSemana = new StringBuilder();

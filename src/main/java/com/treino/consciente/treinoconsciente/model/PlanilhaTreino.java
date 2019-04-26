@@ -83,10 +83,14 @@ public class PlanilhaTreino implements Serializable{
 	}
 
 	public String getNomePlanilhaExer() {
+		if(nomePlanilhaExer != null)
+			return nomePlanilhaExer.trim();
 		return nomePlanilhaExer;
 	}
 
 	public void setNomePlanilhaExer(String nomePlanilhaExer) {
+		if(nomePlanilhaExer != null)
+			this.nomePlanilhaExer = nomePlanilhaExer.trim();
 		this.nomePlanilhaExer = nomePlanilhaExer;
 	}
 

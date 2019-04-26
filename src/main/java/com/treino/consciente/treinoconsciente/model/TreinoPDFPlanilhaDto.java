@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TreinoPDFPlanilhaDto {
 
@@ -19,6 +21,14 @@ public class TreinoPDFPlanilhaDto {
 	private String obs;
 	private String dataIni;
 	private String dataTroca;
+	private String segunda;
+	private String terca;
+	private String quarta;
+	private String quinta;
+	private String sexta;
+	private String sabado;
+	private String domingo;
+	
 	
 	public TreinoPDFPlanilhaDto(Treino treino) {
 		SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");    
@@ -36,6 +46,345 @@ public class TreinoPDFPlanilhaDto {
 		setaPlanilhaC();
 		setaPlanilhaHiit1();
 		setaPlanilhaHiit2();
+	}
+	
+	public void buildProgSemanalHiit(){
+		List<String> diasSemanSelecionados = Stream.of(treino.getDiasDaSemanaHiitStr().split(","))
+				.filter(elem -> !elem.trim().equals("null"))
+				.map (elem -> new String(elem.trim()))
+				.collect(Collectors.toList());
+		
+		for(int i=0; i < diasSemanSelecionados.size(); i++){
+			String dia = diasSemanSelecionados.get(i);
+			
+			
+			if (dia.equals("0")){
+				if(this.domingo != null && !domingo.equals("")){
+					this.domingo += "/HIIT" ;
+				}else{
+					this.domingo = "HIIT";
+				}
+			}else if(dia.equals("1")){
+				if(this.segunda != null && !segunda.equals("")){
+					this.segunda += "/HIIT" ;
+				}else{
+					this.segunda = "HIIT";
+				}
+			}else if(dia.equals("2")){
+				if(this.terca != null && !domingo.equals("")){
+					this.terca += "/HIIT" ;
+				}else{
+					this.terca = "HIIT";
+				}
+			}else if(dia.equals("3")){
+				if(this.quarta != null && !quarta.equals("")){
+					this.quarta += "/HIIT" ;
+				}else{
+					this.quarta = "HIIT";
+				}
+			}else if(dia.equals("4")){
+				if(this.quinta != null && !quinta.equals("")){
+					this.quinta += "/HIIT" ;
+				}else{
+					this.quinta = "HIIT";
+				}
+			}else if(dia.equals("5")){
+				if(this.sexta != null && !sexta.equals("")){
+					this.sexta += "/HIIT" ;
+				}else{
+					this.sexta = "HIIT";
+				}
+			}else if(dia.equals("6")){
+				if(this.sabado != null && !sabado.equals("")){
+					this.sabado += "/HIIT" ;
+				}else{
+					this.sabado = "HIIT";
+				}
+			}
+		}
+	}
+	
+	public void buildProgSemanalAc(){
+		List<String> diasSemanSelecionados = Stream.of(treino.getDiasDaSemanaHiit2Str().split(","))
+				.filter(elem -> !elem.trim().equals("null"))
+				.map (elem -> new String(elem.trim()))
+				.collect(Collectors.toList());
+		
+		for(int i=0; i < diasSemanSelecionados.size(); i++){
+			String dia = diasSemanSelecionados.get(i);
+			
+			
+			if (dia.equals("0")){
+				if(this.domingo != null && !domingo.equals("")){
+					this.domingo += "/AC" ;
+				}else{
+					this.domingo = "AC";
+				}
+			}else if(dia.equals("1")){
+				if(this.segunda != null && !segunda.equals("")){
+					this.segunda += "/AC" ;
+				}else{
+					this.segunda = "AC";
+				}
+			}else if(dia.equals("2")){
+				if(this.terca != null && !domingo.equals("")){
+					this.terca += "/AC" ;
+				}else{
+					this.terca = "AC";
+				}
+			}else if(dia.equals("3")){
+				if(this.quarta != null && !quarta.equals("")){
+					this.quarta += "/AC" ;
+				}else{
+					this.quarta = "AC";
+				}
+			}else if(dia.equals("4")){
+				if(this.quinta != null && !quinta.equals("")){
+					this.quinta += "/AC" ;
+				}else{
+					this.quinta = "AC";
+				}
+			}else if(dia.equals("5")){
+				if(this.sexta != null && !sexta.equals("")){
+					this.sexta += "/AC" ;
+				}else{
+					this.sexta = "AC";
+				}
+			}else if(dia.equals("6")){
+				if(this.sabado != null && !sabado.equals("")){
+					this.sabado += "/AC" ;
+				}else{
+					this.sabado = "AC";
+				}
+			}
+		}
+	}
+	
+	
+	public void builProgrSemanal(){
+		if(treino.getDiasDaSemanaStr() != null && !treino.getDiasDaSemanaStr().equals("")){
+			boolean temTreinoA = (treinosAs != null && !treinosAs.isEmpty());
+			boolean temTreinoB = (treinosBs != null && !treinosBs.isEmpty());
+			boolean temTreinoC = (treinosCs != null && !treinosCs.isEmpty());
+			
+			int qtdeTreinos = 0;
+			if(temTreinoA)
+				qtdeTreinos++;
+			if(temTreinoB)
+				qtdeTreinos++;
+			if(temTreinoC)
+				qtdeTreinos++;
+			
+			List<String> diasSemanSelecionados = Stream.of(treino.getDiasDaSemanaStr().split(","))
+				.filter(elem -> !elem.trim().equals("null"))
+				.map (elem -> new String(elem.trim()))
+				.collect(Collectors.toList());
+			
+			String lastLabel = "";
+			for(int i=0; i < diasSemanSelecionados.size(); i++){
+				String dia = diasSemanSelecionados.get(i);
+				
+				String labelA = "A";
+				String labelB = "B";
+				String labelC = "C";
+				
+				if(qtdeTreinos == 1){
+					if (dia.equals("0")){
+						this.domingo = labelA;
+					}else if(dia.equals("1")){
+						this.segunda = labelA;
+					}else if(dia.equals("2")){
+						this.terca = labelA;
+					}else if(dia.equals("3")){
+						this.quarta = labelA;
+					}else if(dia.equals("4")){
+						this.quinta = labelA;
+					}else if(dia.equals("5")){
+						this.sexta = labelA;
+					}else if(dia.equals("6")){
+						this.sabado = labelA;
+					}
+				}
+				
+				if(qtdeTreinos == 2){
+					
+					if (dia.equals("0")){
+						
+						if(lastLabel.equals(labelA)){
+							lastLabel = labelB;
+							this.domingo = labelB;
+						}else{
+							this.domingo = labelA;
+							lastLabel = labelA;
+						}
+						
+					}else if(dia.equals("1")){
+						
+						if(lastLabel.equals(labelA)){
+							lastLabel = labelB;
+							this.segunda = labelB;
+						}else{
+							lastLabel = labelA;
+							this.segunda = labelA;
+						}
+						
+						
+					}else if(dia.equals("2")){
+						
+						if(lastLabel.equals(labelA)){
+							lastLabel = labelB;
+							this.terca = labelB;
+						}else{
+							lastLabel = labelA;
+							this.terca = labelA;
+						}
+						
+					}else if(dia.equals("3")){
+						
+						if(lastLabel.equals(labelA)){
+							lastLabel = labelB;
+							this.quarta = labelB;
+						}else{
+							lastLabel = labelA;
+							this.quarta = labelA;
+						}
+						
+						
+					}else if(dia.equals("4")){
+						
+						if(lastLabel.equals(labelA)){
+							lastLabel = labelB;
+							this.quinta = labelB;
+						}else{
+							lastLabel = labelA;
+							this.quinta = labelA;
+						}
+						
+						
+					}else if(dia.equals("5")){
+						
+						if(lastLabel.equals(labelA)){
+							lastLabel = labelB;
+							this.sexta = labelB;
+						}else{
+							lastLabel = labelA;
+							this.sexta = labelA;
+						}
+						
+					}else if(dia.equals("6")){
+						
+						if(lastLabel.equals(labelA)){
+							lastLabel = labelB;
+							this.sabado = labelB;
+						}else{
+							lastLabel = labelA;
+							this.sabado = labelA;
+						}
+						
+					}
+				}
+				
+				if(qtdeTreinos == 3){
+					
+					if (dia.equals("0")){
+						
+						if(lastLabel.equals(labelA)){
+							lastLabel = labelB;
+							this.domingo = labelB;
+						}else if(lastLabel.equals(labelB)){
+							this.domingo = labelC;
+							lastLabel = labelC;
+						}else{
+							lastLabel = labelA;
+							this.domingo = labelA;
+						}
+						
+					}else if(dia.equals("1")){
+						
+						if(lastLabel.equals(labelA)){
+							lastLabel = labelB;
+							this.segunda = labelB;
+						}else if(lastLabel.equals(labelB)){
+							this.segunda = labelC;
+							lastLabel = labelC;
+						}else{
+							lastLabel = labelA;
+							this.segunda = labelA;
+						}
+						
+						
+					}else if(dia.equals("2")){
+						
+
+						if(lastLabel.equals(labelA)){
+							lastLabel = labelB;
+							this.terca = labelB;
+						}else if(lastLabel.equals(labelB)){
+							this.terca = labelC;
+							lastLabel = labelC;
+						}else{
+							lastLabel = labelA;
+							this.terca = labelA;
+						}
+						
+					}else if(dia.equals("3")){
+						
+						if(lastLabel.equals(labelA)){
+							lastLabel = labelB;
+							this.quarta = labelB;
+						}else if(lastLabel.equals(labelB)){
+							this.quarta = labelC;
+							lastLabel = labelC;
+						}else{
+							lastLabel = labelA;
+							this.quarta = labelA;
+						}
+						
+						
+					}else if(dia.equals("4")){
+						
+						if(lastLabel.equals(labelA)){
+							lastLabel = labelB;
+							this.quinta = labelB;
+						}else if(lastLabel.equals(labelB)){
+							this.quinta = labelC;
+							lastLabel = labelC;
+						}else{
+							lastLabel = labelA;
+							this.quinta = labelA;
+						}
+						
+					}else if(dia.equals("5")){
+						
+						if(lastLabel.equals(labelA)){
+							lastLabel = labelB;
+							this.sexta = labelB;
+						}else if(lastLabel.equals(labelB)){
+							this.sexta = labelC;
+							lastLabel = labelC;
+						}else{
+							lastLabel = labelA;
+							this.sexta = labelA;
+						}
+						
+					}else if(dia.equals("6")){
+						
+
+						if(lastLabel.equals(labelA)){
+							lastLabel = labelB;
+							this.sabado = labelB;
+						}else if(lastLabel.equals(labelB)){
+							this.sabado = labelC;
+							lastLabel = labelC;
+						}else{
+							lastLabel = labelA;
+							this.sabado = labelA;
+						}
+						
+					}
+				}
+			}
+		}
 	}
 	
 	private void setaPlanilhaA() {
@@ -116,6 +465,62 @@ public class TreinoPDFPlanilhaDto {
 		return hiit1;
 	}
 
+	public String getSegunda() {
+		return segunda;
+	}
+
+	public void setSegunda(String segunda) {
+		this.segunda = segunda;
+	}
+
+	public String getTerca() {
+		return terca;
+	}
+
+	public void setTerca(String terca) {
+		this.terca = terca;
+	}
+
+	public String getQuarta() {
+		return quarta;
+	}
+
+	public void setQuarta(String quarta) {
+		this.quarta = quarta;
+	}
+
+	public String getQuinta() {
+		return quinta;
+	}
+
+	public void setQuinta(String quinta) {
+		this.quinta = quinta;
+	}
+
+	public String getSexta() {
+		return sexta;
+	}
+
+	public void setSexta(String sexta) {
+		this.sexta = sexta;
+	}
+
+	public String getSabado() {
+		return sabado;
+	}
+
+	public void setSabado(String sabado) {
+		this.sabado = sabado;
+	}
+
+	public String getDomingo() {
+		return domingo;
+	}
+
+	public void setDomingo(String domingo) {
+		this.domingo = domingo;
+	}
+
 	public void setHiit1(List<PlanilhaTreino> hiit1) {
 		this.hiit1 = hiit1;
 	}
@@ -156,9 +561,9 @@ public class TreinoPDFPlanilhaDto {
 	public String toString() {
 		return "TreinoPDFPlanilhaDto [treino=" + treino + ", treinosAs=" + treinosAs + ", treinosBs=" + treinosBs
 				+ ", treinosCs=" + treinosCs + ", hiit1=" + hiit1 + ", hiit2=" + hiit2 + ", obs=" + obs + ", dataIni="
-				+ dataIni + ", dataTroca=" + dataTroca + "]";
+				+ dataIni + ", dataTroca=" + dataTroca + ", segunda=" + segunda + ", terca=" + terca + ", quarta="
+				+ quarta + ", quinta=" + quinta + ", sexta=" + sexta + ", sabado=" + sabado + ", domingo=" + domingo
+				+ "]";
 	}
-	
-	
 	
 }

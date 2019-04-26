@@ -18,4 +18,7 @@ public class PlanilhaExercicioService {
 		return repository.findAllPorIdModelo(idModelo);
 	}
  
+	public List<PlanilhaExercicio> findTodosGroupNameLink(){
+		return repository.findTodosGroupNameLink();
+	}
 }

@@ -25,6 +25,12 @@ public class MailContentBuilder {
         return templateEngine.process(mailTemplate, context);
     }
     
+    public String buildMailTreino(String mailTemplate, String aluno) {
+        Context context = new Context();
+        context.setVariable("nomeAluno", aluno);
+        return templateEngine.process(mailTemplate, context);
+    }
+    
 
     //para templates que precisamos preencher, exe: planilhas
 //    public String build(String message) {

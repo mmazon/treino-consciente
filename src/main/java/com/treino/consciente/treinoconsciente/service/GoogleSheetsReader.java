@@ -72,8 +72,6 @@ public class GoogleSheetsReader {
             return values;
         } catch(Exception ex) {
             LOGGER.error("Exception while reading google sheet", ex);
-        } finally {
-
         }
         return null;
     }

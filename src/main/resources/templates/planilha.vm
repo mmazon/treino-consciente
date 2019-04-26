@@ -30,7 +30,7 @@
 				}
 				
 				.msgInicial{
-					 padding-top: 35px;
+					 padding-top: 45px;
 					 text-align: center;
 					 font-size: 13px !important;
 				}
@@ -62,7 +62,7 @@
 				    <td colspan="3">$treinoDto.treino.aluno.nome</td>
 				  </tr>
 				  <tr>
-				    <td width="3%" style="text-align :left">Data Início:</td>
+				    <td width="3%" style="text-align :left">Data In&iacute;cio:</td>
 				    <td>$treinoDto.dataIni</td>
 				   <td width="3%" style="text-align :left">Data Troca:</td>
 				    <td>$treinoDto.dataTroca</td>
@@ -78,10 +78,41 @@
 		
 			<div class="msgInicial">
 			<span>Para lhe ajudar com seus treinos, adicionamos links com videos explicativos de tudo que foi prescrito no seu treino. Para acessá-
-los clique no link (texto em azul sublinhado) do exercício. Isso não elimina a necessidade de uma supervisão profissional
+los clique no link (texto em azul sublinhado) do exerc&iacute;cio. Isso não elimina a necessidade de uma supervisão profissional
 para garantir a perfeita execução do planejado.</span>
 			</div>
 			
+			<div style="padding-top: 25px;">
+				<table border="0" class="treinos">
+	                  <tr style="text-align: center; background-color: #e4ebf2;" >
+			   	   		<td colspan="7" style="font-size: 15px !important;"><b>Programação Semanal</b></td>
+	                  </tr>
+					  <tr>
+					    <td style="background-color: #e0e0e0" width="3%">Segunda</td>
+					    <td style="background-color: #e0e0e0" width="3%">Terça</td>
+					    <td style="background-color: #e0e0e0" width="3%">Quarta</td>
+					    <td style="background-color: #e0e0e0" width="3%">Quinta</td>
+					    <td style="background-color: #e0e0e0" width="3%">Sexta</td>
+					    <td style="background-color: #e0e0e0" width="3%">Sabado</td>
+					    <td style="background-color: #e0e0e0" width="3%">Domingo</td>
+					  </tr>
+					  <tr>
+					    <td width="3%">#if($treinoDto.segunda) $treinoDto.segunda #end</td>
+					    <td width="3%">#if($treinoDto.terca) $treinoDto.terca #end</td>
+					    <td width="3%">#if($treinoDto.quarta) $treinoDto.quarta #end</td>
+					    <td width="3%">#if($treinoDto.quinta) $treinoDto.quinta #end</td>
+					    <td width="3%">#if($treinoDto.sexta) $treinoDto.sexta #end</td>
+					    <td width="3%">#if($treinoDto.sabado) $treinoDto.sabado #end</td>
+					    <td width="3%">#if($treinoDto.domingo) $treinoDto.domingo #end</td>
+					   </tr>
+					</table>
+			
+			</div>
+			#if($obs)
+				<div class="pad-top-exer">	
+					Obs: $obs 
+				</div>
+			#end
 			
 			#if($exerciciosA && $exerciciosA.size() > 0)
 				<div class="pad-top-exer">		
@@ -90,7 +121,7 @@ para garantir a perfeita execução do planejado.</span>
 						<table class="treinos">
 				            <thead>
 				                <tr>
-									<th>Exercício</th>
+									<th>Exerc&iacute;cio</th>
 									<th>Método</th>
 									<th>Observação</th>
 									<th>Séries</th>
@@ -124,7 +155,7 @@ para garantir a perfeita execução do planejado.</span>
 						<table class="treinos">
 				            <thead>
 				                <tr>
-									<th>Exercício</th>
+									<th>Exerc&iacute;cio</th>
 									<th>Método</th>
 									<th>Observação</th>
 									<th>Séries</th>
@@ -158,7 +189,7 @@ para garantir a perfeita execução do planejado.</span>
 						<table class="treinos">
 				            <thead>
 				                <tr>
-									<th>Exercício</th>
+									<th>Exerc&iacute;cio</th>
 									<th>Método</th>
 									<th>Observação</th>
 									<th>Séries</th>
@@ -192,7 +223,7 @@ para garantir a perfeita execução do planejado.</span>
 						<table class="treinos">
 				            <thead>
 				                <tr>
-									<th>Exercício</th>
+									<th>Exerc&iacute;cio</th>
 									<th>Método</th>
 									<th>Observação</th>
 									<th>Séries</th>
@@ -225,7 +256,7 @@ para garantir a perfeita execução do planejado.</span>
 						<table class="treinos">
 				            <thead>
 				                <tr>
-									<th>Exercício</th>
+									<th>Exerc&iacute;cio</th>
 									<th>Método</th>
 									<th>Observação</th>
 									<th>Séries</th>

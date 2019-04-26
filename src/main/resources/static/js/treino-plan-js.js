@@ -54,6 +54,33 @@ function loadExercicios() {
     $("#tableExerResults").load(url+idModelo);
 }
 
+function removeLinhaTableResults(obj){
+	$(obj).parent().parent().remove();
+}
+
+  function addExercicioTable(){
+	  var exerToAdd = $("#dropAddExer").val().split("|");
+	  
+	  $('#tableExerResults tbody').append('<tr>' +
+			'<td text="idPlanTreino" style="display:none;">' +
+          	'<td class="editMe"> </td>' + 
+          	'<td class="editMe">' +exerToAdd[0]+ '</td>' + 
+          	'<td style="display:none;">' + exerToAdd[1] + '</td>' +
+          	'<td class="editMe">' + exerToAdd[2] + '</td>' + 
+          	'<td style="display:none;">' +exerToAdd[3]+'</td>'+
+          	'<td class="editMe"> </td>' +
+          	'<td class="editMe"> </td>' +
+          	'<td class="editMe"> </td>' +
+          	'<td class="editMe"> </td>' +
+          	'<td class="editMe"> </td>' +
+          	'<td> <a class="btn btn-sm btn-danger" onclick="removeLinhaTableResults(this);"><span class="glyphicon glyphicon-trash"></span></a></td>' +
+          	'<td style="display:none;"> </td>' +
+          	'<td style="display:none;"> </td>' +
+          	'<td style="display:none;"> </td>' +
+          	'</tr>');
+	  
+  }
+
   function sendDataTreino(urlMetodo){
 	  var planilhas = [];
 	  var treino = {};
@@ -98,6 +125,9 @@ function loadExercicios() {
 	  
 	  objsTdsExercicios.splice(0, 1);
 	  
+	  var idModeloFix;
+	  var qtDiasFix;
+	  var modeloTreinoFix;
 	  
 	  $.each( objsTdsExercicios, function( keyOut, valueOut ) {
 		  var json = {};
@@ -139,17 +169,29 @@ function loadExercicios() {
 			  }
 			  
 			  //modelo
-			  if(key == 11){
+			  if(key == 12){
+				  if(value === undefined || value === null || value===" "){
+					  value = idModeloFix;
+				  }
 				  modeloTreino = {};
 				  modeloTreino.idModelo = value;
+				  idModeloFix = value;
 			  }
-			  if(key == 12){
+			  if(key == 13){
+				  if(value === undefined || value === null || value===" "){
+					  value = qtDiasFix;
+				  }
 				  modeloTreino.qtDias = value;
+				  qtDiasFix = value;
 			  }
 			  
-			  if(key == 13){
+			  if(key == 14){
+				  if(value === undefined || value === null || value===" "){
+					  value = modeloTreinoFix;
+				  }
 				  modeloTreino.nome = value;
 				  json.modeloTreino = modeloTreino;
+				  modeloTreinoFix = value;
 			  }
 			  
 			  
@@ -189,7 +231,7 @@ function loadExercicios() {
 }
   
   function doPostSave(treino, urlMetodo){
-	  
+	  $('#loader').show();
 	  $.ajax({
 		    method: "POST",
 		    url: "/treino-consciente/" + urlMetodo,
@@ -198,11 +240,37 @@ function loadExercicios() {
 		    success: function(status){
 		        if(status) {
 		        	$('#downFile').show();
-		            alert('Planilha salva com sucesso');
+		            alert('Planilha salva com sucesso!');
+		        }else{
+		        	alert('Ocorreu um erro inesperado!');
 		        }
+		        $('#loader').hide();
 		    }
 		});
-	  
+  }
+  
+  function enviaEmail(){
+	  var result = confirm("Deseja realmente enviar o E-mail?");
+	  if(result){
+		  //$(window).scrollTop(0);
+		  var treino = {};
+		  treino.idTreino = $('#idTreino').val();
+		  $('#loader').show();
+		  $.ajax({
+			    method: "POST",
+			    url: "/treino-consciente/enviaMailPlanilha",
+			    contentType : "application/json",
+			    data: JSON.stringify(treino),
+			    success: function(status){
+			        if(status) {
+			            alert('Email enviado com sucesso!');
+			        }else{
+			        	alert('Ocorreu um erro inesperado!');
+			        }
+			        $('#loader').hide();
+			    }
+			});
+	  }
   }
   
 	function addOtherHiit(){

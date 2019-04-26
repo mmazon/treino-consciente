@@ -25,6 +25,33 @@ $(function () {
     });
 });
 </script>
+<style>
+	.loader {
+	  border: 16px solid #f3f3f3;
+	  border-radius: 50%;
+	  border-top: 16px solid #3498db;
+	  width: 120px;
+	  height: 120px;
+	  -webkit-animation: spin 2s linear infinite; /* Safari */
+	  animation: spin 2s linear infinite;
+	  position:fixed;
+	  bottom: 50%;
+  	  left: 50%;
+  	  display: none;
+  	  
+	}
+	
+	/* Safari */
+	@-webkit-keyframes spin {
+	  0% { -webkit-transform: rotate(0deg); }
+	  100% { -webkit-transform: rotate(360deg); }
+	}
+	
+	@keyframes spin {
+	  0% { transform: rotate(0deg); }
+	  100% { transform: rotate(360deg); }
+	}
+</style>
 <body>
 	<div class="panel panel-default">
 		 <nav class="navbar navbar-inverse navbar-static-top">
@@ -42,7 +69,6 @@ $(function () {
 		  <div id="navbar" class="navbar-collapse collapse">
 		    <ul class="nav navbar-nav">
 		      <li><a th:href="@{/}">Home</a></li>
-		      <li class="active"><a th:href="@{/add/}" >Novo treino</a></li>
 		      <li><a th:href="@{/logout}" title="Logout"><span class="glyphicon glyphicon-log-out"></span></a></li>
 		    </ul>
 		  </div>
@@ -51,11 +77,14 @@ $(function () {
 			<strong>Cadastrar Planilha Treino</strong>
 		</div>
 		<div class="panel-body">
+		
+		<div id="loader" class="loader"></div>
+
+		
 			<form class="form-horizontal" th:object="${treino}" th:action="@{/savePlanilha}" method="POST" style="margin: 10px;">
 			 <input type="hidden" class="form-control input-sm" id="idTreino" th:field="*{idTreino}" readOnly="readonly"/>
 				
 				<div class="form-group">
- 					<fieldset>
 						<div class="form-group row">
 							<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
 								<div th:each="detailedError : ${#fields.detailedErrors()}">
@@ -64,17 +93,17 @@ $(function () {
 							</div>
 						</div> 					
 						<div class="form-group row">                                                          
-							<div class="col-md-3" th:classappend="${#fields.hasErrors('professor.nome')}? 'has-error'">
+							<div class="col-md-4" th:classappend="${#fields.hasErrors('professor.nome')}? 'has-error'">
 							    <label>Professor: <span th:text="*{professor.nome}" th:id="professor"> </span></label> 
 							    <input type="hidden" th:field="*{professor.idProfessor}" th:id="idProfessor"/>
 							</div>
-							<div class="col-md-3" th:classappend="${#fields.hasErrors('aluno.nome')}? 'has-error'">
+							<div class="col-md-4" th:classappend="${#fields.hasErrors('aluno.nome')}? 'has-error'">
 								<label>Aluno: <span th:text="*{aluno.nome}" th:id="aluno"> </span></label>
 								<input type="hidden" th:field="*{aluno.idAluno}" th:id="idAluno"/>
 							</div>
 						</div>
 						<div class="form-group row">
-							<div class="col-md-3" th:classappend="${#fields.hasErrors('tipoTreino')}? 'has-error'">
+							<div class="col-md-8" th:classappend="${#fields.hasErrors('tipoTreino')}? 'has-error'">
 								<label>Vezes na semana</label>
 							    <div class="weekDays-selector">
 								    
@@ -89,7 +118,7 @@ $(function () {
 						    </div>								
 						</div>	
 						 <div class="form-group row">
-						 	<div class="col-md-2">
+						 	<div class="col-md-8">
 							 	<a class="btn btn-sm btn-success" onclick="loadComboModelos()">Load Modelos</a>
 							 </div>
 						 </div>
@@ -102,6 +131,7 @@ $(function () {
 									<option th:each="modelo : ${comboModelos}" th:value="${modelo.idModelo}" th:text="${modelo.nome}"></option>
 							    </select>
 							</div>
+							<div class="col-md-4"></div>
 						</div>
 						
 					   	<div class="form-group row" id="divExer" th:style="${planilhasExercicios!=null and !planilhasExercicios.empty ? '' : 'display:none;'}">                                                          
@@ -151,10 +181,14 @@ $(function () {
 						                    </td>
 						                    <td class="editMe" th:text="${exercicio.cadencia}" th:id="${stat.index} + 'cadencia'">
 						                    </td>
+						                    <td th:id="${stat.index} + 'btExcluir'">
+						                    	<a class="btn btn-sm btn-danger" onclick="removeLinhaTableResults(this);">
+						                    		<span class="glyphicon glyphicon-trash"></span> 
+												</a>
+						                    </td>
 						                    <td th:text="${exercicio.modeloTreino.idModelo}" style="display:none;"/>
 						                    <td th:text="${exercicio.modeloTreino.qtDias}" style="display:none;"/>  
 						                    <td th:text="${exercicio.modeloTreino.nome}" style="display:none;"/> 
-						                	</td>
 						                </tr>
 						            </tbody>
 						        </table>
@@ -162,7 +196,24 @@ $(function () {
 						</div>
 						
 						<div class="form-group row">
-						 	<div class="col-md-2">
+						 	<div class="col-md-4">
+						 		<select class="form-control" id="dropAddExer">
+									<option th:each="exerc : ${exers}" th:value="${exerc.nomeExercicio +'|'+ exerc.linkExercicio +'|'+exerc.metodo + '|'+exerc.linkMetodo}" th:text="${exerc.nomeExercicio+' - '+exerc.metodo}"></option>
+							    </select>
+						    </div>
+						    <div class="col-md-2">
+						 		<a class="btn btn-sm btn-success" onclick="addExercicioTable()" id="idBtnExercicio"> Add Exercício</a>
+							 </div>
+							 <div class="col-md-2"></div>
+						 </div>
+						
+						<div class="form-group row">
+							<div class="col-md-8" >
+							</div>
+						</div>
+						
+						<div class="form-group row">
+						 	<div class="col-md-8">
 							 	<a class="btn btn-sm btn-success" onclick="addHiit()" id="idBtnHiit" th:style="${planilhasExercicios!=null and !planilhasExercicios.empty ? '' : 'display:none;'}"> Add HIIT</a>
 							 </div>
 						 </div>
@@ -170,7 +221,7 @@ $(function () {
 						<div id="camposHiit1" th:style="${planilhasExerciciosHiit!=null and !planilhasExerciciosHiit.empty ? '' : 'display:none;'}">
 							
 							<div class="form-group row">
-								<div class="col-md-3">
+								<div class="col-md-8">
 									<label>Vezes na semana HIIT</label>
 								    <div class="weekDays-selector">
 									    
@@ -191,6 +242,7 @@ $(function () {
 										<option th:each="modelo : ${comboModelosHiit}" th:value="${modelo.idModelo}" th:text="${modelo.nome}"></option>
 								    </select>
 								</div>
+								<div class="col-md-4"></div>
 							</div>
 							
 							<div class="form-group row">                                                          
@@ -240,6 +292,7 @@ $(function () {
 						                    </td>
 						                    <td class="editMe" th:text="${exercicioHiit.cadencia}" th:id="${stat.index} + 'cadencia'">
 						                    </td>
+						                    <td text="btExcluiFake" style="display:none;"></td>
 						                   <td th:text="${exercicioHiit.modeloTreino.idModelo}" style="display:none;"/>
 						                    <td th:text="${exercicioHiit.modeloTreino.qtDias}" style="display:none;"/>  
 						                    <td th:text="${exercicioHiit.modeloTreino.nome}" style="display:none;"/> 
@@ -252,7 +305,7 @@ $(function () {
 						</div>
 						
 						<div class="form-group row">
-						 	<div class="col-md-2">
+						 	<div class="col-md-8">
 							 	<a class="btn btn-sm btn-success" onclick="addOtherHiit()"
 								 	 id="idBtnOtherHiit" th:style="${planilhasExerciciosHiit!=null and !planilhasExerciciosHiit.empty ? '' : 'display:none;'}">Add AC</a>
 							 </div>
@@ -261,7 +314,7 @@ $(function () {
 						 <div id="camposHiit2" th:style="${planilhasExerciciosHiit2!=null and !planilhasExerciciosHiit2.empty ? '' : 'display:none;'}">
 							
 							<div class="form-group row">
-								<div class="col-md-3">
+								<div class="col-md-8">
 									<label>Vezes na semana AC</label>
 								    <div class="weekDays-selector">
 									    
@@ -282,6 +335,7 @@ $(function () {
 										<option th:each="modelo : ${comboModelosHiit2}" th:value="${modelo.idModelo}" th:text="${modelo.nome}"></option>
 								    </select>
 								</div>
+								<div class="col-md-4"></div>
 							</div>
 							
 							<div class="form-group row">                                                          
@@ -306,7 +360,7 @@ $(function () {
 						                	<td text="idPlanTreino" style="display:none;"> 
 						                	</td>
 						                	
-						                	<td th:text="${exercicioHiit2.nomePlanilhaExer}"> 
+						                	<td th:text="${exercicioHiit2.nomePlanilhaExer}" > 
 						                	</td>
 						                	
 						                	<td class="editMe" th:text="${exercicioHiit2.nomeExercicio}" th:id="${stat.index} + '-nomeExercicio'" >
@@ -331,7 +385,7 @@ $(function () {
 						                    </td>
 						                    <td class="editMe" th:text="${exercicioHiit2.cadencia}" th:id="${stat.index} + 'cadencia'">
 						                    </td>
-						                    
+						                    <td text="btExcluiFake" style="display:none;"></td>
 						                    <td th:text="${exercicioHiit2.modeloTreino.idModelo}" style="display:none;"/>
 						                    <td th:text="${exercicioHiit2.modeloTreino.qtDias}" style="display:none;"/>  
 						                    <td th:text="${exercicioHiit2.modeloTreino.nome}" style="display:none;"/> 
@@ -348,15 +402,18 @@ $(function () {
 								<label>Obs</label>
 								<textarea class="form-control input-sm" th:field="*{observacao}" id="observacao" cols="5" rows="5" placeholder="Informe a obs"></textarea>
 							</div>
+							<div class="col-md-4"></div>
 						</div>	
 						
-					</fieldset>
 				</div>
 				<div class="form-group row">
 					<a class="btn btn-sm btn-primary" onclick="sendDataTreino('savePlanilha')">Salvar planilha</a>
 <!-- 					<a class="btn btn-sm btn-success" onclick="sendDataTreino('geraPlanilha')">Download treino</a> -->
 				    <a id="downFile" th:style="${planilhasExercicios!=null and !planilhasExercicios.empty ? '' : 'display:none;'}"
 				    	 class="btn btn-sm btn-success" th:href="@{/files/{id}(id=${treino.idTreino})}" >Download treino</a> 
+				    	 
+				    <a id="enviaEmail" th:style="${planilhasExercicios!=null and !planilhasExercicios.empty ? '' : 'display:none;'}"
+				    	 class="btn btn-sm btn-success" onclick="enviaEmail()">Enviar E-mail</a>
 					
 					<a th:href="@{/}" class="btn btn-sm btn-default">Cancelar</a>
 				</div>

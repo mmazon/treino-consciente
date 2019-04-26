@@ -47,7 +47,7 @@ public class TreinoService {
     private static final String SPREADSHEET_ID_RENOV_MES = "1wCyiScZNpQUmSaZ8m4xUE_IQjfzOYjMNAIGmWS4XYRk";
 	private static final String SPREADSHEET_ID_RENOV_TRI = "1vNJdUIvOBNW34jGQfAASv79h-KXeZZhRx6L3VqjB-m4";
 	private static final String SPREADSHEET_ID_RENOV_ANO = "1CpE3TeHMwRpTk9zH-0l1lceotPIiFOWtNPunJvEDdSA";
-	private static final Boolean DEBUG = false;
+	private static final Boolean DEBUG = true;
 	
 	public List<Treino> findAll() {
 		return treinoRepository.findAll();
@@ -158,6 +158,10 @@ public class TreinoService {
           logger.info("No data found in " + spreadsheet);
       } else {
 		   for (List<Object> row : values) {
+			   if (row == null || row.isEmpty()){
+				   logger.info("White ROW found in " + spreadsheet);
+				   continue;
+			   }
 			   String a = (String)row.get(0);
 			   if(a.equals("Carimbo de data/hora")){
 				   logger.info("No data found in " + spreadsheet);
@@ -360,9 +364,9 @@ public class TreinoService {
 			if(p.getMonths() == 0 && p.getDays() <= 7){
 				String emailAluno = treino.getAluno().getEmail();
 				if(DEBUG){
-					mailService.sendMail("Renovação", "html_email_renovacao", "moacir.mazon@gmail.com");
+					mailService.sendMailRenovacoesEPesquisa("Renovação", "html_email_renovacao", "moacir.mazon@gmail.com");
 				}else{
-					mailService.sendMail("Renovação", "html_email_renovacao", emailAluno);
+					mailService.sendMailRenovacoesEPesquisa("Renovação", "html_email_renovacao", emailAluno);
 				}
 				treino.setEnviouMailRenov(1);				
 				treinoRepository.save(treino);
@@ -382,9 +386,9 @@ public class TreinoService {
 			
 			String emailAluno = treino.getAluno().getEmail();
 			if(DEBUG){
-				mailService.sendMail("Pesquisa de Satisfação", "html_email_pesq_qualidade", "moacir.mazon@gmail.com");
+				mailService.sendMailRenovacoesEPesquisa("Pesquisa de Satisfação", "html_email_pesq_qualidade", "moacir.mazon@gmail.com");
 			}else{
-				mailService.sendMail("Pesquisa de Satisfação", "html_email_pesq_qualidade", emailAluno);
+				mailService.sendMailRenovacoesEPesquisa("Pesquisa de Satisfação", "html_email_pesq_qualidade", emailAluno);
 			}
 			treino.setEnviouMailPesq(1);				
 			treinoRepository.save(treino);
@@ -413,9 +417,9 @@ public class TreinoService {
 			if(p.getMonths() == 0 && p.getDays() >= 7){
 				String emailAluno = treino.getAluno().getEmail();
 				if(DEBUG){
-					mailService.sendMail("Ainda dá tempo!", "html_email_ainda_tempo", "moacir.mazon@gmail.com");
+					mailService.sendMailRenovacoesEPesquisa("Ainda dá tempo!", "html_email_ainda_tempo", "moacir.mazon@gmail.com");
 				}else{
-					mailService.sendMail("Ainda dá tempo!", "html_email_ainda_tempo", emailAluno);
+					mailService.sendMailRenovacoesEPesquisa("Ainda dá tempo!", "html_email_ainda_tempo", emailAluno);
 				}
 				treino.setEnviouMailAindaTempo(1);				
 				treinoRepository.save(treino);
