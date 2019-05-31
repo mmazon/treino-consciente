@@ -15,11 +15,11 @@ public interface PlanilhaExercicioRepository  extends JpaRepository<PlanilhaExer
 	public List<PlanilhaExercicio> findAllPorIdModelo(Long idModelo);
 	
 	    @Query("SELECT " +
-	           "    new com.treino.consciente.treinoconsciente.model.PlanilhaExercicio(e.nomeExercicio, e.linkExercicio, e.metodo, e.linkMetodo) " +
+	           "    new com.treino.consciente.treinoconsciente.model.PlanilhaExercicio(e.nomeExercicio, e.linkExercicio) " +
 	           "FROM " +
 	           "    planilha_exercicio e " +
 	           "GROUP BY " +
-	           "    e.nomeExercicio, e.linkExercicio,e.metodo,e.linkMetodo " + 
+	           "    e.nomeExercicio, e.linkExercicio " + 
 	           "ORDER BY e.nomeExercicio")
     public  List<PlanilhaExercicio> findTodosGroupNameLink();
 }

@@ -195,10 +195,10 @@ $(function () {
 							</div>
 						</div>
 						
-						<div class="form-group row">
+						<div class="form-group row" id="addExerDiv" th:style="${planilhasExercicios!=null and !planilhasExercicios.empty ? '' : 'display:none;'}">
 						 	<div class="col-md-4">
 						 		<select class="form-control" id="dropAddExer">
-									<option th:each="exerc : ${exers}" th:value="${exerc.nomeExercicio +'|'+ exerc.linkExercicio +'|'+exerc.metodo + '|'+exerc.linkMetodo}" th:text="${exerc.nomeExercicio+' - '+exerc.metodo}"></option>
+									<option th:each="exerc : ${exers}" th:value="${exerc.nomeExercicio +'|'+ exerc.linkExercicio}" th:text="${exerc.nomeExercicio}"></option>
 							    </select>
 						    </div>
 						    <div class="col-md-2">
@@ -257,8 +257,8 @@ $(function () {
 											<th>Observação</th>
 											<th>Séries</th>
 											<th>Reps</th>
+											<th>Estímulo</th>
 											<th>Intervalo</th>
-											<th>Cadência</th>
 						                </tr>
 						            </thead>
 						            <tbody>
@@ -350,8 +350,8 @@ $(function () {
 											<th>Observação</th>
 											<th>Séries</th>
 											<th>Reps</th>
+											<th>Estímulo</th>
 											<th>Intervalo</th>
-											<th>Cadência</th>
 						                </tr>
 						            </thead>
 						            <tbody>
@@ -384,7 +384,7 @@ $(function () {
 						                    <td class="editMe" th:text="${exercicioHiit2.intervalo}" th:id="${stat.index} + '-intervalo'">
 						                    </td>
 						                    <td class="editMe" th:text="${exercicioHiit2.cadencia}" th:id="${stat.index} + 'cadencia'">
-						                    </td>
+						                    </td> 
 						                    <td text="btExcluiFake" style="display:none;"></td>
 						                    <td th:text="${exercicioHiit2.modeloTreino.idModelo}" style="display:none;"/>
 						                    <td th:text="${exercicioHiit2.modeloTreino.qtDias}" style="display:none;"/>  

@@ -51,6 +51,7 @@ function loadExercicios() {
 
     $("#divExer").show();
     $("#idBtnHiit").show();
+    $("#addExerDiv").show();
     $("#tableExerResults").load(url+idModelo);
 }
 
@@ -59,6 +60,16 @@ function removeLinhaTableResults(obj){
 }
 
   function addExercicioTable(){
+	  
+	  var objsTdsExercicios = [];
+	  $('#tableExerResults tr').each(function() {
+		  var objsIn = [];
+		  $(this).find('td').each(function() {
+			  objsIn.push($(this).html());
+		  });
+		  objsTdsExercicios.push(objsIn);
+	  });
+	  
 	  var exerToAdd = $("#dropAddExer").val().split("|");
 	  
 	  $('#tableExerResults tbody').append('<tr>' +
@@ -66,13 +77,13 @@ function removeLinhaTableResults(obj){
           	'<td class="editMe"> </td>' + 
           	'<td class="editMe">' +exerToAdd[0]+ '</td>' + 
           	'<td style="display:none;">' + exerToAdd[1] + '</td>' +
-          	'<td class="editMe">' + exerToAdd[2] + '</td>' + 
-          	'<td style="display:none;">' +exerToAdd[3]+'</td>'+
+          	'<td class="editMe">' + objsTdsExercicios[2][4] + '</td>' + 
+          	'<td style="display:none;">' +objsTdsExercicios[2][5]+'</td>'+
           	'<td class="editMe"> </td>' +
+          	'<td class="editMe">' +objsTdsExercicios[2][7]+ '</td>'+
+          	'<td class="editMe">' +objsTdsExercicios[2][8]+ '</td>'+
           	'<td class="editMe"> </td>' +
-          	'<td class="editMe"> </td>' +
-          	'<td class="editMe"> </td>' +
-          	'<td class="editMe"> </td>' +
+          	'<td class="editMe">' +objsTdsExercicios[2][10]+ '</td>'+
           	'<td> <a class="btn btn-sm btn-danger" onclick="removeLinhaTableResults(this);"><span class="glyphicon glyphicon-trash"></span></a></td>' +
           	'<td style="display:none;"> </td>' +
           	'<td style="display:none;"> </td>' +

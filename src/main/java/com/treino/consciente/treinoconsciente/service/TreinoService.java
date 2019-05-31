@@ -47,7 +47,7 @@ public class TreinoService {
     private static final String SPREADSHEET_ID_RENOV_MES = "1wCyiScZNpQUmSaZ8m4xUE_IQjfzOYjMNAIGmWS4XYRk";
 	private static final String SPREADSHEET_ID_RENOV_TRI = "1vNJdUIvOBNW34jGQfAASv79h-KXeZZhRx6L3VqjB-m4";
 	private static final String SPREADSHEET_ID_RENOV_ANO = "1CpE3TeHMwRpTk9zH-0l1lceotPIiFOWtNPunJvEDdSA";
-	private static final Boolean DEBUG = true;
+	private static final Boolean DEBUG = false;
 	
 	public List<Treino> findAll() {
 		return treinoRepository.findAll();

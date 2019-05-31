@@ -70,6 +70,11 @@ public class PlanilhaExercicio implements Serializable {
 		this.linkMetodo = linkMetodo;
 	}
 	
+	public PlanilhaExercicio(String nome, String link) {
+		this.nomeExercicio = nome;
+		this.linkExercicio = link;
+	}
+	
 	public Long getIdPlanilhaExercicio() {
 		return idPlanilhaExercicio;
 	}

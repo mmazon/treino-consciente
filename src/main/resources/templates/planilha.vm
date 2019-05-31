@@ -224,22 +224,20 @@ para garantir a perfeita execução do planejado.</span>
 				            <thead>
 				                <tr>
 									<th>Exerc&iacute;cio</th>
-									<th>Método</th>
 									<th>Observação</th>
+									<th>Método</th>
 									<th>Séries</th>
-									<th>Reps</th>
+									<th>Estímulo</th>
 									<th>Intervalo</th>
-									<th>Cadência</th>
 				                </tr>
 				            </thead>
 				            <tbody>
 				                #foreach( $exer in $exerciciosHiit1 )
 								   <tr>
 								     <td style="background-color: #e0e0e0"> <a href="$exer.linkExercicio"> $exer.nomeExercicio </a> </td>
-								     <td> <a href="$exer.linkMetodo">$exer.metodo </a> </td>
 								     <td>$exer.observacao</td>
+								     <td> <a href="$exer.linkMetodo">$exer.metodo </a> </td>
 								     <td>$exer.series</td>
-								     <td>$exer.reps</td>
 								     <td>$exer.intervalo</td>
 								     <td>$exer.cadencia</td>
 								   </tr>	
@@ -257,22 +255,20 @@ para garantir a perfeita execução do planejado.</span>
 				            <thead>
 				                <tr>
 									<th>Exerc&iacute;cio</th>
-									<th>Método</th>
 									<th>Observação</th>
+									<th>Método</th>
 									<th>Séries</th>
-									<th>Reps</th>
+									<th>Estímulo</th>
 									<th>Intervalo</th>
-									<th>Cadência</th>
 				                </tr>
 				            </thead>
 				            <tbody>
 				                #foreach( $exer in $exerciciosHiit2 )
 								   <tr>
 								     <td style="background-color: #e0e0e0"> <a href="$exer.linkExercicio"> $exer.nomeExercicio </a> </td>
-								     <td> <a href="$exer.linkMetodo">$exer.metodo </a> </td>
 								     <td>$exer.observacao</td>
+								     <td> <a href="$exer.linkMetodo">$exer.metodo </a> </td>
 								     <td>$exer.series</td>
-								     <td>$exer.reps</td>
 								     <td>$exer.intervalo</td>
 								     <td>$exer.cadencia</td>
 								   </tr>	
