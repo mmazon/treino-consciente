@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Transient;
 
 @Entity(name = "planilha_exercicio")
 public class PlanilhaExercicio implements Serializable {
@@ -22,7 +23,7 @@ public class PlanilhaExercicio implements Serializable {
 	
 	@Id
 	@Column(name = "id_planilha_exercicio")
-	@SequenceGenerator(name = "planilha_exercicio_seq", sequenceName = "planilha_exercicio_seq")
+	@SequenceGenerator(name = "planilha_exercicio_seq", sequenceName = "planilha_exercicio_seq", allocationSize = 1, initialValue = 2000)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "planilha_exercicio_seq")
 	private Long idPlanilhaExercicio;
 	
@@ -59,6 +60,9 @@ public class PlanilhaExercicio implements Serializable {
 	
 	@Column(name = "cadencia")
 	private String cadencia;
+	
+	@Column(name = "sequencia_lista")
+	private String sequenciaNaLista;
 	
 	public PlanilhaExercicio() {
 	}
@@ -108,6 +112,16 @@ public class PlanilhaExercicio implements Serializable {
 	public String getObservacao() {
 		return observacao;
 	}
+	public String getSequenciaNaLista() {
+		if(sequenciaNaLista != null)
+			return sequenciaNaLista.trim();
+		return sequenciaNaLista;
+	}
+
+	public void setSequenciaNaLista(String sequenciaNaLista) {
+		this.sequenciaNaLista = sequenciaNaLista;
+	}
+
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
 	}

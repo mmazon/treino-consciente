@@ -67,6 +67,12 @@ public class TreinoController {
 		return "home";
 	}
 	
+	@RequestMapping(value = "/addSeteDias/id", method = RequestMethod.GET)
+	public String addSeteDias(@RequestParam("id") Long id, Model model) {
+		treinoService.addSeteDias(id);
+		return findAll(model);
+	}
+	
 	@RequestMapping("/sync")
 	public String sincronizar(Model model) {
 		try {
@@ -147,7 +153,6 @@ public class TreinoController {
 				treinoBusca.setModeloOtherHiitSelecionado(modeloHiit2);
 				List<PlanilhaTreino> planilhasAbc = setaPlanilhaAbc(treinoBusca.getPlanilhas());
 				model.addAttribute("planilhasExercicios", planilhasAbc);
-				
 			}else{
 				model.addAttribute("comboModelos", new ArrayList<>());
 			}
@@ -211,11 +216,43 @@ public class TreinoController {
 			trataCamposTela(treino, treinoBusca);
 			trataDiasSemana(treino, treinoBusca);
 			treinoService.saveSemAlterarStatusAndDatas(treinoBusca);
+			trataHiitAcNovos(treinoBusca);
 		}
 		return addPlanilha(treino.getIdTreino(), model);
 	}
 
 	
+	private void trataHiitAcNovos(Treino treinoBusca) {
+		List<PlanilhaExercicio> listHiitInserir = new ArrayList<>();
+		
+		for(PlanilhaTreino pt : treinoBusca.getPlanilhas()){
+			PlanilhaExercicio peNovo = new PlanilhaExercicio();
+			ModeloExercicio modeloNovo = new ModeloExercicio();
+			if(pt.getNomePlanilhaExer().equals("HIIT") || pt.getNomePlanilhaExer().startsWith("Aer")){
+				if(!planilhaService.findAllByNomeExercicioIgnoreCaseContaining(pt.getNomeExercicio())){
+					
+					modeloNovo.setNome(pt.getModeloTreino().getNome() + " - " + pt.getNomeExercicio());
+					modeloNovo.setQtDias(pt.getModeloTreino().getQtDias());
+					modeloNovo = modeloService.save(modeloNovo);	
+					
+					peNovo.setCadencia(pt.getCadencia());
+					peNovo.setIntervalo(pt.getIntervalo());
+					peNovo.setLinkExercicio(pt.getLinkExercicio());
+					peNovo.setNomeExercicio(pt.getNomeExercicio());
+					peNovo.setNomePlanilhaExer(pt.getNomePlanilhaExer());
+					peNovo.setObservacao(pt.getObservacao());
+					peNovo.setReps(pt.getReps());
+					peNovo.setSeries(pt.getSeries());
+					peNovo.setModeloTreino(modeloNovo);
+					
+					listHiitInserir.add(peNovo);
+				}
+			}
+		}
+		if(listHiitInserir != null && listHiitInserir.size() > 0)
+			planilhaService.saveAll(listHiitInserir);
+	}
+
 	@GetMapping(value = "/modelos/{qtdeDias}")
 	public String loadModelos(Model model, @PathVariable("qtdeDias") Integer qtdeDias) {
 		model.addAttribute("comboModelos", modeloService.findAllByQtDias(qtdeDias));
@@ -264,7 +301,10 @@ public class TreinoController {
 		Optional<Treino> treinoBuscaOpt = treinoService.findOne(treino.getIdTreino());
 		Treino treinoBusca = treinoBuscaOpt.get();
 		File file = pdfConv.convertHtmlToPdfFile(treinoBusca);
-		mailService.sendMailPlanilhaTreino(treinoBusca, "Treino " + treinoBusca.getAluno().getNome()  +".pdf", file);
+		if(treinoBusca.getSequenciaTreino().equals(1))
+			mailService.sendMailPlanilhaPrimeiroTreino(treinoBusca, "Treino - "+ treinoBusca.getSequenciaTreino() + " - " + treinoBusca.getAluno().getNome() + ".pdf", file);
+		else
+			mailService.sendMailPlanilhaTreino(treinoBusca, "Treino - "+ treinoBusca.getSequenciaTreino() + " - " + treinoBusca.getAluno().getNome() + ".pdf", file);
 		return addPlanilha(treinoBusca.getIdTreino(), model);
 	}
 

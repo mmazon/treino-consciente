@@ -19,7 +19,7 @@ public class ModeloExercicio implements Serializable{
 	
 	@Id
 	@Column(name = "id_modelo")
-	@SequenceGenerator(name = "modelo_exercicio_seq", sequenceName = "modelo_exercicio_seq")
+	@SequenceGenerator(name = "modelo_exercicio_seq", sequenceName = "modelo_exercicio_seq", allocationSize = 1, initialValue = 100)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "modelo_exercicio_seq")
 	private Long idModelo;
 	

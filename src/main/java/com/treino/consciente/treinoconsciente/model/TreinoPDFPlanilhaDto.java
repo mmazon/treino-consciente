@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -112,7 +114,6 @@ public class TreinoPDFPlanilhaDto {
 		
 		for(int i=0; i < diasSemanSelecionados.size(); i++){
 			String dia = diasSemanSelecionados.get(i);
-			
 			
 			if (dia.equals("0")){
 				if(this.domingo != null && !domingo.equals("")){
@@ -388,27 +389,174 @@ public class TreinoPDFPlanilhaDto {
 	}
 	
 	private void setaPlanilhaA() {
+		List<PlanilhaTreino> planilhasA = new ArrayList<>();
+		List<String> posicoes = new ArrayList<>();
 		for(PlanilhaTreino pla : treino.getPlanilhas()){
 			if(pla.getNomePlanilhaExer().startsWith("Treino A")){
+				planilhasA.add(pla);
+				if(pla.getSequenciaNaLista() != null && !pla.getSequenciaNaLista().equals("")){
+					posicoes.add(pla.getSequenciaNaLista());
+				}
+			}
+		}
+		
+		Collections.sort(posicoes, new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return Integer.parseInt(o1) - Integer.parseInt(o2);
+			}
+		});
+		
+		int currentPosicao =0; 
+		for(int i=0; i < planilhasA.size(); i++){
+			PlanilhaTreino pla = planilhasA.get(i);
+			if(pla.getNomePlanilhaExer().startsWith("Treino A")){
+				if(pla.getSequenciaNaLista() == null || pla.getSequenciaNaLista().equals("")){
+					String a = ""+(i+1);
+					if(posicoes.contains(a)){
+						currentPosicao = verificaProximoSequencia(posicoes, Integer.parseInt(posicoes.get(0)) + 1);
+						pla.setSequenciaNaLista(""+currentPosicao);
+						posicoes.remove(0);
+					}else{
+						if(currentPosicao != 0){
+							currentPosicao = verificaProximoSequencia(posicoes, currentPosicao+1);
+							pla.setSequenciaNaLista(""+currentPosicao);
+						}else{
+							pla.setSequenciaNaLista(""+(i+1));
+						}
+					}
+					currentPosicao++;
+					
+				}
 				treinosAs.add(pla);
 			}
 		}
+		
+		Collections.sort(treinosAs, new Comparator<PlanilhaTreino>() {
+			@Override
+			public int compare(PlanilhaTreino o1, PlanilhaTreino o2) {
+				return Integer.parseInt(o1.getSequenciaNaLista()) - Integer.parseInt(o2.getSequenciaNaLista());
+			}
+		});
+		
+	}
+	
+	private int verificaProximoSequencia(List<String> posicoes, int nextCandidate){
+		for(String posicao : posicoes){
+			String nextString = "" + nextCandidate;
+			if(posicoes.contains(nextString)){
+				nextCandidate++;
+				continue;
+			}else{
+				return nextCandidate;
+			}
+		}
+		return nextCandidate;
+
 	}
 	
 	private void setaPlanilhaB() {
+		List<String> posicoes = new ArrayList<>();
+		List<PlanilhaTreino> planilhasB = new ArrayList<>();
 		for(PlanilhaTreino pla : treino.getPlanilhas()){
 			if(pla.getNomePlanilhaExer().startsWith("Treino B")){
+				planilhasB.add(pla);
+				if(pla.getSequenciaNaLista() != null && !pla.getSequenciaNaLista().equals("")){
+					posicoes.add(pla.getSequenciaNaLista());
+				}
+			}
+		}
+		
+		Collections.sort(posicoes, new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return Integer.parseInt(o1) - Integer.parseInt(o2);
+			}
+		});
+		
+		int currentPosicao = 0;
+		for(int i=0; i < planilhasB.size(); i++){
+			PlanilhaTreino pla = planilhasB.get(i);
+			if(pla.getNomePlanilhaExer().startsWith("Treino B")){
+				if(pla.getSequenciaNaLista() == null || pla.getSequenciaNaLista().equals("")){
+					String a = ""+(i+1);
+					if(posicoes.contains(a)){
+						currentPosicao = verificaProximoSequencia(posicoes, Integer.parseInt(posicoes.get(0)) + 1);
+						pla.setSequenciaNaLista(""+currentPosicao);
+						posicoes.remove(0);
+					}else{
+						if(currentPosicao != 0){
+							currentPosicao = verificaProximoSequencia(posicoes, currentPosicao+1);
+							pla.setSequenciaNaLista(""+currentPosicao);
+						}else{
+							pla.setSequenciaNaLista(""+(i+1));
+						}
+					}
+					
+				}
 				treinosBs.add(pla);
 			}
 		}
+		
+		Collections.sort(treinosBs, new Comparator<PlanilhaTreino>() {
+			@Override
+			public int compare(PlanilhaTreino o1, PlanilhaTreino o2) {
+				return Integer.parseInt(o1.getSequenciaNaLista()) - Integer.parseInt(o2.getSequenciaNaLista());
+			}
+		});
+		
 	}
 	
 	private void setaPlanilhaC() {
+		List<String> posicoes = new ArrayList<>();
+		List<PlanilhaTreino> planilhasC = new ArrayList<>();
 		for(PlanilhaTreino pla : treino.getPlanilhas()){
 			if(pla.getNomePlanilhaExer().startsWith("Treino C")){
+				planilhasC.add(pla);
+				if(pla.getSequenciaNaLista() != null && !pla.getSequenciaNaLista().equals("")){
+					posicoes.add(pla.getSequenciaNaLista());
+				}
+			}
+		}
+		
+		Collections.sort(posicoes, new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return Integer.parseInt(o1) - Integer.parseInt(o2);
+			}
+		});
+		
+		int currentPosicao =0; 
+		for(int i=0; i < planilhasC.size(); i++){
+			PlanilhaTreino pla = planilhasC.get(i);
+			if(pla.getNomePlanilhaExer().startsWith("Treino C")){
+				if(pla.getSequenciaNaLista() == null || pla.getSequenciaNaLista().equals("")){
+					String a = ""+(i+1);
+					if(posicoes.contains(a)){
+						currentPosicao = verificaProximoSequencia(posicoes, Integer.parseInt(posicoes.get(0)) + 1);
+						pla.setSequenciaNaLista(""+currentPosicao);
+						posicoes.remove(0);
+					}else{
+						if(currentPosicao != 0){
+							currentPosicao = verificaProximoSequencia(posicoes, currentPosicao+1);
+							pla.setSequenciaNaLista(""+currentPosicao);
+						}else{
+							pla.setSequenciaNaLista(""+(i+1));
+						}
+					}
+					currentPosicao++;
+					
+				}
 				treinosCs.add(pla);
 			}
 		}
+		
+		Collections.sort(treinosCs, new Comparator<PlanilhaTreino>() {
+			@Override
+			public int compare(PlanilhaTreino o1, PlanilhaTreino o2) {
+				return Integer.parseInt(o1.getSequenciaNaLista()) - Integer.parseInt(o2.getSequenciaNaLista());
+			}
+		});
 	}
 
 	private void setaPlanilhaHiit2() {

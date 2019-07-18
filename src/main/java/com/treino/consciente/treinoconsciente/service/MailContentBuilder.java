@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import com.treino.consciente.treinoconsciente.model.Treino;
+
 @Service
 public class MailContentBuilder {
  
@@ -25,18 +27,14 @@ public class MailContentBuilder {
         return templateEngine.process(mailTemplate, context);
     }
     
-    public String buildMailTreino(String mailTemplate, String aluno) {
+    public String buildMailTreino(String mailTemplate, Treino treino, String whatsapp, String whatsAppLink) {
         Context context = new Context();
-        context.setVariable("nomeAluno", aluno);
+        int indexOf = treino.getAluno().getNome().indexOf(' ');
+        context.setVariable("nomeAluno",  treino.getAluno().getNome().substring(0, indexOf)); 
+        context.setVariable("whatsApp",  whatsapp);
+        context.setVariable("whatsAppLink",  whatsAppLink);
+        context.setVariable("nomeProfessor",  treino.getProfessor().getNome().substring(0, treino.getProfessor().getNome().lastIndexOf(' ')));
         return templateEngine.process(mailTemplate, context);
     }
-    
 
-    //para templates que precisamos preencher, exe: planilhas
-//    public String build(String message) {
-//        Context context = new Context();
-//        context.setVariable("message", message);
-//        return templateEngine.process("mailTemplate", context);
-//    }
- 
 }

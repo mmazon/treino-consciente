@@ -22,4 +22,6 @@ public interface PlanilhaExercicioRepository  extends JpaRepository<PlanilhaExer
 	           "    e.nomeExercicio, e.linkExercicio " + 
 	           "ORDER BY e.nomeExercicio")
     public  List<PlanilhaExercicio> findTodosGroupNameLink();
+	    
+	public List<PlanilhaExercicio> findAllByNomeExercicioIgnoreCaseContaining(String nome);
 }

@@ -21,4 +21,15 @@ public class PlanilhaExercicioService {
 	public List<PlanilhaExercicio> findTodosGroupNameLink(){
 		return repository.findTodosGroupNameLink();
 	}
+	
+	public boolean findAllByNomeExercicioIgnoreCaseContaining(String nome){
+		List<PlanilhaExercicio> list = repository.findAllByNomeExercicioIgnoreCaseContaining(nome); 
+		if(list != null && list.size() > 0)
+			return true;
+		return false;
+	}
+	
+	public void saveAll(List<PlanilhaExercicio> planilhas){
+		repository.saveAll(planilhas);
+	}
 }

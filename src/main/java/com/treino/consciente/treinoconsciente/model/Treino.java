@@ -355,9 +355,7 @@ public class Treino implements Serializable {
 		cal.setTime(dataRespostaFormulario);
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate retorno = LocalDate.of(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH));
-//		if (this.sequenciaTreino == 1) {
-			retorno = retorno.plusDays(7);
-//		}
+		retorno = retorno.plusDays(7);
 		return retorno.format(dateFormatter);
 	}
 	

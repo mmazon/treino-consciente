@@ -7,12 +7,12 @@
     	    <p>Agradecemos sua preferência em nossos serviços, siga as instruções a seguir.</p>
     	    <ul>
 			  <li>Verifique em anexo os arquivos com o planejamento do seu treino e instruções para execução. Leia as instruções para execução antes de executar o treino.</li>
-			  <li>Para dúvida entre em contato no WhatsApp (48) 991150215. Basta clicar neste link www.bit.ly/Rafaeltc Chamo-me Rafael</li>
+			  <li>Para dúvida entre em contato no WhatsApp <span th:text="${whatsApp}" ></span>. Basta clicar neste link <a th:href="@{'http://www.bit.ly/' + ${whatsAppLink}}"><span th:text="'http://www.bit.ly/' + ${whatsAppLink}"></span></a> Chamo-me <span th:text="${nomeProfessor}" ></span></li>
 			  <li>Ao postar fotos e/ou vídeos nas redes sociais, favor nos marcar para nosso acompanhamento de seu treinamento.</li>
 			</ul>
 			<p>Sobre o treino:</p>
 			<p>Não hesite em me mandar feedbacks e tirar suas duvidas via whatsapp. É o veículo mais dinâmico para nos comunicarmos.</p>
 			<p>Bons Treinos.</p>
-    	    <p>Atenciosamente, Rafael, professor da equipe Treino Consciente.</p>
+    	    <p>Atenciosamente, <span th:text="${nomeProfessor}" ></span>, professor da equipe Treino Consciente.</p>
 </body>
 </html>

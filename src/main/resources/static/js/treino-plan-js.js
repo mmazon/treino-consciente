@@ -84,6 +84,7 @@ function removeLinhaTableResults(obj){
           	'<td class="editMe">' +objsTdsExercicios[2][8]+ '</td>'+
           	'<td class="editMe"> </td>' +
           	'<td class="editMe">' +objsTdsExercicios[2][10]+ '</td>'+
+          	'<td class="editMe"> </td>' +
           	'<td> <a class="btn btn-sm btn-danger" onclick="removeLinhaTableResults(this);"><span class="glyphicon glyphicon-trash"></span></a></td>' +
           	'<td style="display:none;"> </td>' +
           	'<td style="display:none;"> </td>' +
@@ -178,9 +179,12 @@ function removeLinhaTableResults(obj){
 			  if(key == 10){
 				  json.cadencia = value;
 			  }
+			  if(key == 11){
+				  json.sequenciaNaLista = value;
+			  }
 			  
 			  //modelo
-			  if(key == 12){
+			  if(key == 13){
 				  if(value === undefined || value === null || value===" "){
 					  value = idModeloFix;
 				  }
@@ -188,7 +192,7 @@ function removeLinhaTableResults(obj){
 				  modeloTreino.idModelo = value;
 				  idModeloFix = value;
 			  }
-			  if(key == 13){
+			  if(key == 14){
 				  if(value === undefined || value === null || value===" "){
 					  value = qtDiasFix;
 				  }
@@ -196,7 +200,7 @@ function removeLinhaTableResults(obj){
 				  qtDiasFix = value;
 			  }
 			  
-			  if(key == 14){
+			  if(key == 15){
 				  if(value === undefined || value === null || value===" "){
 					  value = modeloTreinoFix;
 				  }

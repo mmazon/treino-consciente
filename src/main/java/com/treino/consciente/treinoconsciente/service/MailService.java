@@ -59,26 +59,47 @@ public class MailService {
 		}
 	}
 	
-	public void sendMailPlanilhaTreino(Treino treino, String fileName, File planilha){
+	public void sendMailPlanilhaPrimeiroTreino(Treino treino, String fileName, File planilha){
 		String template = "html_email_treino_planilha.html";
 		JavaMailSender mailSender = null;
+		String whatsApp = "";
+		String whatsAppLink = "";
+		String from = "";
 		
-		mailSender = getMailSender(fromMail, "Quebrando_Mitos1234");
+		if(treino.getProfessor().getNome().startsWith("Rafa")){
+			mailSender = getMailSender("rafael@treinoconsciente.com.br", "dindel18");
+			from = "rafael@treinoconsciente.com.br";
+			whatsApp = "(48) 991150215";
+			whatsAppLink = "Rafaeltc";
+		}
+		if(treino.getProfessor().getNome().startsWith("Josu")){
+			mailSender = getMailSender("josue@treinoconsciente.com.br", "tc012368");
+			from = "josue@treinoconsciente.com.br";
+			whatsApp = "(48) 996083770";
+			whatsAppLink = "JosueRicardoTC";
+		}
+		if(treino.getProfessor().getNome().startsWith("Rodrigo")){
+			mailSender = getMailSender("rodrigo@treinoconsciente.com.br", "quebrandomitos");
+			from = "rodrigo@treinoconsciente.com.br";
+			whatsApp = "(48) 999132393";
+			whatsAppLink = "Rodrigotc";
+		}
 		
 		MimeMessage mail = mailSender.createMimeMessage();
 	    
 	    try {
 	    	MimeMessageHelper helper = new MimeMessageHelper(mail, true);
-			//helper.setTo(treino.getAluno().getEmail());
-	    	helper.setTo("rafael@treinoconsciente.com.br");
-	    	helper.setBcc("moacir.mazon@gmail.com");
-			helper.setSubject("Consultoria - teste");
+			
+	    	//helper.setTo(treino.getAluno().getEmail());
+	    	helper.setTo("moacir.mazon@gmail.com");
+	    	
+			helper.setSubject("Consultoria");
 			
 			helper.addAttachment(fileName, planilha);
 			
-			helper.setFrom(fromMail, fromName);
+			helper.setFrom(from, "Treino Consciente");
 			
-			String content = mailContentBuilder.buildMailTreino(template, treino.getAluno().getNome());
+			String content = mailContentBuilder.buildMailTreino(template, treino, whatsApp, whatsAppLink);
 			helper.setText(content, true);
 		    mailSender.send(mail);
 		} catch (MessagingException | UnsupportedEncodingException e) {
@@ -105,5 +126,43 @@ public class MailService {
  
         mailSender.setJavaMailProperties(javaMailProperties);
         return mailSender;
-    }  
+    }
+
+	public void sendMailPlanilhaTreino(Treino treino, String fileName, File planilha) {
+		String template = "html_email_treino_planilha_sequenciaTreino";
+		JavaMailSender mailSender = null;
+		String from = "";
+		
+		if(treino.getProfessor().getNome().startsWith("Rafa")){
+			mailSender = getMailSender("rafael@treinoconsciente.com.br", "dindel18");
+			from = "rafael@treinoconsciente.com.br";
+		}
+		if(treino.getProfessor().getNome().startsWith("Josu")){
+			mailSender = getMailSender("josue@treinoconsciente.com.br", "tc012368");
+			from = "josue@treinoconsciente.com.br";
+		}
+		if(treino.getProfessor().getNome().startsWith("Rodrigo")){
+			mailSender = getMailSender("rodrigo@treinoconsciente.com.br", "quebrandomitos");
+			from = "rodrigo@treinoconsciente.com.br";
+		}
+		
+		MimeMessage mail = mailSender.createMimeMessage();
+	    
+	    try {
+	    	MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+			
+	    	//helper.setTo(treino.getAluno().getEmail());
+	    	helper.setTo("moacir.mazon@gmail.com");
+	    	
+			helper.setSubject("Consultoria");
+			helper.addAttachment(fileName, planilha);
+			helper.setFrom(from, "Treino Consciente");
+			
+			String content = mailContentBuilder.buildMailTreino(template, treino, null, null);
+			helper.setText(content, true);
+		    mailSender.send(mail);
+		} catch (MessagingException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+	}  
 }

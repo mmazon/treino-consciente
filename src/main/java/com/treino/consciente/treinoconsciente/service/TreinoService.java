@@ -47,7 +47,7 @@ public class TreinoService {
     private static final String SPREADSHEET_ID_RENOV_MES = "1wCyiScZNpQUmSaZ8m4xUE_IQjfzOYjMNAIGmWS4XYRk";
 	private static final String SPREADSHEET_ID_RENOV_TRI = "1vNJdUIvOBNW34jGQfAASv79h-KXeZZhRx6L3VqjB-m4";
 	private static final String SPREADSHEET_ID_RENOV_ANO = "1CpE3TeHMwRpTk9zH-0l1lceotPIiFOWtNPunJvEDdSA";
-	private static final Boolean DEBUG = false;
+	private static final Boolean DEBUG = true;
 	
 	public List<Treino> findAll() {
 		return treinoRepository.findAll();
@@ -95,12 +95,15 @@ public class TreinoService {
 	
 	private boolean isFinalPlano(Treino treino) {
 		String plano = treino.getTipoTreino().substring(treino.getTipoTreino().length() - 2);
+		
 		if(treino.getSequenciaTreino().toString().equals(plano)){
 			return true;
 		}
-		plano = plano.substring(1); //para treino com o hifem no plano (3-3, 1-1)
-		if(treino.getSequenciaTreino().toString().equals(plano)){
-			return true;
+		if(plano.contains("-")){
+			plano = plano.substring(1); //para treino com o hifem no plano (3-3, 1-1)
+			if(treino.getSequenciaTreino().toString().equals(plano)){
+				return true;
+			}
 		}
 		
 		return false;
@@ -425,6 +428,23 @@ public class TreinoService {
 				treinoRepository.save(treino);
 			}
 		}
+	}
+
+	public void addSeteDias(Long id) {
+		Optional<Treino> treinoBusca = this.findOne(id);
+		Treino treino = new Treino();
+		if(treinoBusca.isPresent()){
+			treino = treinoBusca.get();
+			
+			Calendar calhj = Calendar.getInstance();
+			calhj.setTime(treino.getDataRespostaFormulario());
+			LocalDate dataFormularioAddSeteDias = LocalDate.of(calhj.get(Calendar.YEAR), calhj.get(Calendar.MONTH)+1, calhj.get(Calendar.DAY_OF_MONTH));
+			dataFormularioAddSeteDias = dataFormularioAddSeteDias.plusDays(7);
+			
+			treino.setDataRespostaFormulario(Date.from(dataFormularioAddSeteDias.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			treinoRepository.save(treino);
+		}
+		
 	}
 
 }

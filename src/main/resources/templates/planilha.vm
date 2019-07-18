@@ -6,7 +6,7 @@
 		  
 		  <style>
 		  		body {
-		  			font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+	  				font-family: "Century Gothic,CenturyGothic,AppleGothic,sans-serif"; 
 		  		}
 				.treinos {
 				    border-collapse: collapse;

@@ -148,6 +148,7 @@ $(function () {
 											<th>Reps</th>
 											<th>Intervalo</th>
 											<th>Cadência</th>
+											<th></th>
 						                </tr>
 						            </thead>
 						            <tbody>
@@ -181,6 +182,8 @@ $(function () {
 						                    </td>
 						                    <td class="editMe" th:text="${exercicio.cadencia}" th:id="${stat.index} + 'cadencia'">
 						                    </td>
+						                    <td class="editMe" th:text="${exercicio.sequenciaNaLista}" th:id="${stat.index} + 'sequencia'">
+						                    </td>
 						                    <td th:id="${stat.index} + 'btExcluir'">
 						                    	<a class="btn btn-sm btn-danger" onclick="removeLinhaTableResults(this);">
 						                    		<span class="glyphicon glyphicon-trash"></span> 
@@ -188,6 +191,7 @@ $(function () {
 						                    </td>
 						                    <td th:text="${exercicio.modeloTreino.idModelo}" style="display:none;"/>
 						                    <td th:text="${exercicio.modeloTreino.qtDias}" style="display:none;"/>  
+						                    <td th:text="${exercicio.modeloTreino.nome}" style="display:none;"/>
 						                    <td th:text="${exercicio.modeloTreino.nome}" style="display:none;"/> 
 						                </tr>
 						            </tbody>
@@ -259,6 +263,7 @@ $(function () {
 											<th>Reps</th>
 											<th>Estímulo</th>
 											<th>Intervalo</th>
+											<th></th>
 						                </tr>
 						            </thead>
 						            <tbody>
@@ -292,6 +297,9 @@ $(function () {
 						                    </td>
 						                    <td class="editMe" th:text="${exercicioHiit.cadencia}" th:id="${stat.index} + 'cadencia'">
 						                    </td>
+						                    
+						                    <td th:text="${exercicioHiit.sequenciaNaLista}" style="display:none;"/>
+						                    
 						                    <td text="btExcluiFake" style="display:none;"></td>
 						                   <td th:text="${exercicioHiit.modeloTreino.idModelo}" style="display:none;"/>
 						                    <td th:text="${exercicioHiit.modeloTreino.qtDias}" style="display:none;"/>  
@@ -352,6 +360,7 @@ $(function () {
 											<th>Reps</th>
 											<th>Estímulo</th>
 											<th>Intervalo</th>
+											<th></th>
 						                </tr>
 						            </thead>
 						            <tbody>
@@ -385,6 +394,7 @@ $(function () {
 						                    </td>
 						                    <td class="editMe" th:text="${exercicioHiit2.cadencia}" th:id="${stat.index} + 'cadencia'">
 						                    </td> 
+						                    <td th:text="${exercicioHiit2.sequenciaNaLista}" style="display:none;"/>
 						                    <td text="btExcluiFake" style="display:none;"></td>
 						                    <td th:text="${exercicioHiit2.modeloTreino.idModelo}" style="display:none;"/>
 						                    <td th:text="${exercicioHiit2.modeloTreino.qtDias}" style="display:none;"/>  

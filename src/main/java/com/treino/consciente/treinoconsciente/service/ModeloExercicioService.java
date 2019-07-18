@@ -26,4 +26,8 @@ public class ModeloExercicioService {
 	public Optional<ModeloExercicio> findOne(Long id) {
 		return repository.findById(id);
 	}
+	
+	public ModeloExercicio save(ModeloExercicio modelo){
+		return repository.save(modelo);
+	}
 }

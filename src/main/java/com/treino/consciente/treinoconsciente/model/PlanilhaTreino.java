@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Transient;
 
 @Entity(name = "planilha_treino")
 public class PlanilhaTreino implements Serializable{
@@ -63,6 +64,9 @@ public class PlanilhaTreino implements Serializable{
 	@Column(name = "cadencia")
 	private String cadencia;
 	
+	@Column(name = "sequencia_lista")
+	private String sequenciaNaLista;
+	
 	public PlanilhaTreino() {
 	}
 
@@ -76,6 +80,16 @@ public class PlanilhaTreino implements Serializable{
 
 	public Treino getTreino() {
 		return treino;
+	}
+
+	public String getSequenciaNaLista() {
+		if(sequenciaNaLista != null)
+			return sequenciaNaLista.trim();
+		return sequenciaNaLista;
+	}
+
+	public void setSequenciaNaLista(String sequenciaNaLista) {
+		this.sequenciaNaLista = sequenciaNaLista;
 	}
 
 	public void setTreino(Treino treino) {

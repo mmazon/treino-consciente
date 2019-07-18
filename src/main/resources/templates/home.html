@@ -60,6 +60,11 @@
 							<td th:text="${treino.limiteEnvio}"  th:style="${treino.corFundoTreino}" th:classappend="${treino.piscaFundo == true} ? mydiv : other"></td>
 							<td>
 								<div class="btn-group pull-right">
+							   		<a class="btn btn-sm btn-success" th:href="@{/addSeteDias/id(id=*{treino.idTreino})}" >+ 7 Dias</a>
+							   </div>
+							</td>
+							<td>
+								<div class="btn-group pull-right">
 							   		<a class="btn btn-sm btn-primary" th:href="@{/edit/{id}(id=${treino.idTreino})}" >Editar</a>
 							   </div>
 							</td>
