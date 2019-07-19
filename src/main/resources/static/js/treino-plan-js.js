@@ -255,6 +255,7 @@ function removeLinhaTableResults(obj){
 		    success: function(status){
 		        if(status) {
 		        	$('#downFile').show();
+		        	$('#enviaEmail').show();
 		            alert('Planilha salva com sucesso!');
 		        }else{
 		        	alert('Ocorreu um erro inesperado!');

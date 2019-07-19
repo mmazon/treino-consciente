@@ -447,4 +447,11 @@ public class TreinoService {
 		
 	}
 
+	public boolean isAlunoNovo(Treino treino) {
+		List<Treino> treinos = treinoRepository.buscaTreinosByIdAluno(treino.getAluno().getIdAluno());
+		if(treinos != null && treinos.size() > 1) //existe mais de 1 treino do aluno, quer dizer que não é novo
+			return false;
+		return true;
+	}
+
 }

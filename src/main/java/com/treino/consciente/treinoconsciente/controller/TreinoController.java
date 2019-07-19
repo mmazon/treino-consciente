@@ -301,7 +301,7 @@ public class TreinoController {
 		Optional<Treino> treinoBuscaOpt = treinoService.findOne(treino.getIdTreino());
 		Treino treinoBusca = treinoBuscaOpt.get();
 		File file = pdfConv.convertHtmlToPdfFile(treinoBusca);
-		if(treinoBusca.getSequenciaTreino().equals(1))
+		if(treinoService.isAlunoNovo(treinoBusca))
 			mailService.sendMailPlanilhaPrimeiroTreino(treinoBusca, "Treino - "+ treinoBusca.getSequenciaTreino() + " - " + treinoBusca.getAluno().getNome() + ".pdf", file);
 		else
 			mailService.sendMailPlanilhaTreino(treinoBusca, "Treino - "+ treinoBusca.getSequenciaTreino() + " - " + treinoBusca.getAluno().getNome() + ".pdf", file);

@@ -91,7 +91,7 @@ public class MailService {
 	    	MimeMessageHelper helper = new MimeMessageHelper(mail, true);
 			
 	    	//helper.setTo(treino.getAluno().getEmail());
-	    	helper.setTo("moacir.mazon@gmail.com");
+	    	helper.setTo("rafael@treinoconsciente.com.br");
 	    	
 			helper.setSubject("Consultoria");
 			
@@ -152,7 +152,7 @@ public class MailService {
 	    	MimeMessageHelper helper = new MimeMessageHelper(mail, true);
 			
 	    	//helper.setTo(treino.getAluno().getEmail());
-	    	helper.setTo("moacir.mazon@gmail.com");
+	    	helper.setTo("rafael@treinoconsciente.com.br");
 	    	
 			helper.setSubject("Consultoria");
 			helper.addAttachment(fileName, planilha);
