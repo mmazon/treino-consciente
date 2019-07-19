@@ -77,13 +77,13 @@ function removeLinhaTableResults(obj){
           	'<td class="editMe"> </td>' + 
           	'<td class="editMe">' +exerToAdd[0]+ '</td>' + 
           	'<td style="display:none;">' + exerToAdd[1] + '</td>' +
-          	'<td class="editMe">' + objsTdsExercicios[2][4] + '</td>' + 
-          	'<td style="display:none;">' +objsTdsExercicios[2][5]+'</td>'+
+          	'<td class="editMe">' + objsTdsExercicios[3][4] + '</td>' + 
+          	'<td style="display:none;">' +objsTdsExercicios[3][5]+'</td>'+
           	'<td class="editMe"> </td>' +
-          	'<td class="editMe">' +objsTdsExercicios[2][7]+ '</td>'+
-          	'<td class="editMe">' +objsTdsExercicios[2][8]+ '</td>'+
-          	'<td class="editMe"> </td>' +
-          	'<td class="editMe">' +objsTdsExercicios[2][10]+ '</td>'+
+          	'<td class="editMe">' +objsTdsExercicios[3][7]+ '</td>'+
+          	'<td class="editMe">' +objsTdsExercicios[3][8]+ '</td>'+
+          	'<td class="editMe">' +objsTdsExercicios[3][9]+ '</td>'+
+          	'<td class="editMe">' +objsTdsExercicios[3][10]+ '</td>'+
           	'<td class="editMe"> </td>' +
           	'<td> <a class="btn btn-sm btn-danger" onclick="removeLinhaTableResults(this);"><span class="glyphicon glyphicon-trash"></span></a></td>' +
           	'<td style="display:none;"> </td>' +
