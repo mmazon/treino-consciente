@@ -73,7 +73,7 @@ public class TreinoPDFPlanilhaDto {
 					this.segunda = "HIIT";
 				}
 			}else if(dia.equals("2")){
-				if(this.terca != null && !domingo.equals("")){
+				if(this.terca != null && !terca.equals("")){
 					this.terca += "/HIIT" ;
 				}else{
 					this.terca = "HIIT";
@@ -128,7 +128,7 @@ public class TreinoPDFPlanilhaDto {
 					this.segunda = "AC";
 				}
 			}else if(dia.equals("2")){
-				if(this.terca != null && !domingo.equals("")){
+				if(this.terca != null && !terca.equals("")){
 					this.terca += "/AC" ;
 				}else{
 					this.terca = "AC";

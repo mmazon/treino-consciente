@@ -299,8 +299,11 @@ $(function () {
 						                    </td>
 						                    
 						                    <td th:text="${exercicioHiit.sequenciaNaLista}" style="display:none;"/>
-						                    
-						                    <td text="btExcluiFake" style="display:none;"></td>
+						                    <td th:id="${stat.index} + 'btExcluir'">
+						                    	<a class="btn btn-sm btn-danger" onclick="removeLinhaTableResults(this);">
+						                    		<span class="glyphicon glyphicon-trash"></span> 
+												</a>
+						                    </td>
 						                   <td th:text="${exercicioHiit.modeloTreino.idModelo}" style="display:none;"/>
 						                    <td th:text="${exercicioHiit.modeloTreino.qtDias}" style="display:none;"/>  
 						                    <td th:text="${exercicioHiit.modeloTreino.nome}" style="display:none;"/> 
@@ -395,7 +398,11 @@ $(function () {
 						                    <td class="editMe" th:text="${exercicioHiit2.cadencia}" th:id="${stat.index} + 'cadencia'">
 						                    </td> 
 						                    <td th:text="${exercicioHiit2.sequenciaNaLista}" style="display:none;"/>
-						                    <td text="btExcluiFake" style="display:none;"></td>
+						                    <td th:id="${stat.index} + 'btExcluir'">
+						                    	<a class="btn btn-sm btn-danger" onclick="removeLinhaTableResults(this);">
+						                    		<span class="glyphicon glyphicon-trash"></span> 
+												</a>
+						                    </td>
 						                    <td th:text="${exercicioHiit2.modeloTreino.idModelo}" style="display:none;"/>
 						                    <td th:text="${exercicioHiit2.modeloTreino.qtDias}" style="display:none;"/>  
 						                    <td th:text="${exercicioHiit2.modeloTreino.nome}" style="display:none;"/> 
